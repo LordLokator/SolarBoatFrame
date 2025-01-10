@@ -75,6 +75,22 @@ This repository contains the **Autonomous Ship Control Framework**, a modular sy
 
 ---
 
+## Setup
+
+You need root privileges for the setupper.
+
+1. Make the setup bash script executable:
+      ```bash
+      sudo chmod +x setup_env.sh
+      ```
+
+2. Make the setup bash script executable:
+      ```bash
+      ./setup_env.sh
+      ```
+
+---
+
 ## Gists & snippets
 
 [Python basic GPS using geopy and geocoder](https://gist.github.com/LordLokator/e056aad11b58d2d68011c2a2d5450408)
