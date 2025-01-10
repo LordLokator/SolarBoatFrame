@@ -1,1 +1,3 @@
-loguru
+python-can # CAN bus module
+
+loguru # Logger
