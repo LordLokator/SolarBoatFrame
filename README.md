@@ -2,6 +2,9 @@
 
 This repository contains the **Autonomous Ship Control Framework**, a modular system designed to seamlessly connect and manage dedicated sensors, the CAN bus, actuators, communication modules (e.g., 4G), GPS, and a decision-making module. This framework acts as the backbone for orchestrating autonomous ship operations in real-world and simulated environments.
 
+
+![image](https://github.com/user-attachments/assets/49beafc7-d98f-45ee-9129-125b8b236b02)
+
 ---
 
 ## 🌟 Core Objectives
