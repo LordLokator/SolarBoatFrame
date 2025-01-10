@@ -73,6 +73,12 @@ This repository contains the **Autonomous Ship Control Framework**, a modular sy
 └── README.md            # Project documentation
 ```
 
+---
+
+## Gists & snippets
+
+[Python basic GPS using geopy and geocoder](https://gist.github.com/LordLokator/e056aad11b58d2d68011c2a2d5450408)
+
 
 ---
 
