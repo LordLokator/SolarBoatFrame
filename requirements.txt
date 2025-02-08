@@ -1,3 +1,4 @@
 python-can # CAN bus module
+python-dotenv # For reading the .env config
 
 loguru # Logger
