@@ -30,9 +30,13 @@ SZANTOD_LON = 17.89972984313507
 BMEK_LAT = 47.48147848232312
 BMEK_LON = 19.05566975662944
 
-# BME K [EPSG:32633]
-BMEK_X = 805448.863469
-BMEK_Y = 5266582.869029
+# BME K [EPSG:32634]
+BMEK_X_32634 = 353516.7257719671
+BMEK_Y_32634 = 5260503.589850288
+
+# # BME K [EPSG:32633]
+# BMEK_X_32633 = 805448.863469
+# BMEK_Y_32633 = 5266582.869029
 
 
 class TestGPSPoint(unittest.TestCase):
@@ -90,35 +94,44 @@ class TestShipPosition(unittest.TestCase):
         lat, lon = ship.get_coordinates()
         self.assertIn((lat, lon), [(copy(SZANTOD_LAT), copy(SZANTOD_LON))])
 
+    def test_project_earthbased(self):
+        point = GPSPoint(BMEK_LAT, BMEK_LON)
+
+        self.assertAlmostEqual(point.Xn, BMEK_X_32634)
+        self.assertAlmostEqual(point.Yn, BMEK_Y_32634)
+
 
 class TestBuoyPosition(unittest.TestCase):
     def test_within_radius(self):
 
         # Tihanyi rév
-        lan_1 = copy(TIHANY_LAT)
+        lat_1 = copy(TIHANY_LAT)
         lon_1 = copy(TIHANY_LON)
 
-        buoy = BuoyPosition(lan_1, lon_1, 2000)  # 2km [real: 1.1km]
+        buoy = BuoyPosition(lat_1, lon_1, 2000)  # 2km [real: 1.1km]
 
         # Szántódi rév
-        lan_2 = copy(SZANTOD_LAT)
+        lat_2 = copy(SZANTOD_LAT)
         lon_2 = copy(SZANTOD_LON)
-        p = GPSPoint(lan_2, lon_2)
+        p = GPSPoint(lat_2, lon_2)
 
         self.assertTrue(buoy.is_within_radius(p))
 
     def test_outside_radius(self):
 
         # Tihanyi rév
-        lan_1 = copy(TIHANY_LAT)
+        lat_1 = copy(TIHANY_LAT)
         lon_1 = copy(TIHANY_LON)
 
-        buoy = BuoyPosition(lan_1, lon_1, 100)  # 100m [real: 1100m]
+        buoy = BuoyPosition(lat_1, lon_1, 100)  # 100m [real: 1100m]
 
         # Szántódi rév
-        lan_2 = copy(SZANTOD_LAT)
+        lat_2 = copy(SZANTOD_LAT)
         lon_2 = copy(SZANTOD_LAT)
-        p = GPSPoint(lan_2, lon_2)
+        p = GPSPoint(
+            latitude=lat_2,
+            longitude=lon_2
+        )
 
         self.assertTrue(not buoy.is_within_radius(p))
 

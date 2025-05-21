@@ -1,5 +1,6 @@
 # base.py
 
+from pyproj import Transformer, CRS
 from threading import Lock
 from math import radians, cos, sin, asin, sqrt
 from loguru import logger
@@ -23,9 +24,29 @@ class GPSPoint:
         self._lock = Lock()
         self.latitude = latitude
         self.longitude = longitude
+        self.Xn = None
+        self.Yn = None
+
+        self._crs_geodetic = CRS.from_epsg(4326)  # WGS84
+        self._crs_projected = CRS.from_epsg(32634)  # UTM zone 34N (EPSG:32634)
+        self._transformer = Transformer.from_crs(
+            self._crs_geodetic,
+            self._crs_projected,
+            always_xy=True
+        )
+
+        self.update_projected_coordinates()
 
         msg = f"Initialized GPSPoint: ({self.latitude}, {self.longitude})"
         logger.debug(msg)
+
+    def _utm_zone(self):
+        return int((self.longitude + 180) / 6) + 1
+
+    def update_projected_coordinates(self):
+        with self._lock:
+            self.Xn, self.Yn = self._transformer.transform(self.longitude, self.latitude)
+            logger.debug(f"Updated projected coordinates: Xn={self.Xn:.2f}, Yn={self.Yn:.2f}")
 
     def get_coordinates(self):
         with self._lock:
