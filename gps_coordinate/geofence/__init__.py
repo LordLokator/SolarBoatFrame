@@ -1,6 +1,6 @@
 # __init__.py
 
-from .polygonial import PolygonalGeofence
+from .polygonal import PolygonalGeofence
 from .circular import CircularGeofence
 
 
