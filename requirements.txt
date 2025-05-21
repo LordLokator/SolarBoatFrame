@@ -1,4 +1,6 @@
 python-can # CAN bus module
 python-dotenv # For reading the .env config
 
+shapely # For checking if a polygon contains a point @ GPS
+
 loguru # Logger
