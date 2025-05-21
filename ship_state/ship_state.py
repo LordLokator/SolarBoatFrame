@@ -17,7 +17,15 @@ class ShipState:
 
     def __init__(self, starting_position: ShipPosition):
         self.current_position: ShipPosition = starting_position
-        self.route: list[ObjectiveCoordinate] = [] # init?
+        self.route: list[ObjectiveCoordinate] = []  # init?
+
+        self.x: float  # Earth-fixed x
+        self.y: float  # Earth-fixed y
+        self.psi: float  # heading in radians (w.r.t North)
+        self.u: float  # surge speed
+        self.v: float  # sway speed
+        self.r: float  # yaw rate
+
 
         # TODO
         ...

@@ -34,8 +34,10 @@ def main():
         # TODO: Kitaláljuk, mit mondjunk az aktuárotorknak
         ...
 
+        # TODO: a CAN üzeneteit majd valahogy be kell vezetni a manager-be!
+        # e.g rudder state
+
         # TODO: Közvetítünk a CAN felé.
-        # NOTE: a CAN üzeneteit majd valahogy be kell vezetni a manager-be!
         can_manager.send_message(
             # tell engine to do stuff...
         )

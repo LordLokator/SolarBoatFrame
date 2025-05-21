@@ -6,17 +6,32 @@ import threading
 from gps_coordinate import GPSPoint, ShipPosition, BuoyPosition, ObjectiveCoordinate
 from gps_coordinate.geofence.circular import CircularGeofence
 
-# Tihanyi rév
+from loguru import logger
+LOG_PATH = os.path.abspath(os.path.join("logging", "test_gps_module.log"))
+
+logger.add(
+    LOG_PATH,
+    level="DEBUG",
+    rotation="500 KB",
+    backtrace=True,
+    diagnose=True
+)
+
+# Tihanyi rév [EPSG:4326]
 TIHANY_LAN = 46.88868997786068
 TIHANY_LON = 17.89171566948177
 
-# Szántódi rév
+# Szántódi rév [EPSG:4326]
 SZANTOD_LAN = 46.87993481783788
 SZANTOD_LON = 17.89972984313507
 
-# BME K
+# BME K [EPSG:4326]
 BMEK_LAN = 47.48147848232312
 BMEK_LON = 19.05566975662944
+
+# BME K [EPSG:32633]
+BMEK_X = 805448.863469
+BMEK_Y = 5266582.869029
 
 
 class TestGPSPoint(unittest.TestCase):

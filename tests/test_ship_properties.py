@@ -10,7 +10,13 @@ SZANTOD_LON = 17.89972984313507
 
 class TestGPSPoint(unittest.TestCase):
     def test_constructor(self):
-        props = ShipProperties()
+        props = ShipProperties(
+            breadth=...,
+            displacement=...,
+            draft=...,
+            length=...,
+            x_g=...,
+        )
 
         self.assertTrue(True)
 

@@ -2,13 +2,13 @@
 """Ide kellenek a statikus tulajdonságok, pl hajó merülése, vagy közvetlenül ebből származtatott mennyiségek."""
 
 
+from dataclasses import dataclass
+
+
+@dataclass
 class ShipProperties:
-    _instance = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
-    def __init__(self):
-        ...
+    length: float  # LOA
+    breadth: float  # B
+    draft: float  # Td
+    displacement: float  # Delta
+    x_g: float  # center of gravity x position (usually 0)
