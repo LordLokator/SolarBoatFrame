@@ -1,3 +1,4 @@
+from gps_coordinate.objective import ObjectiveCoordinate
 from ship_state.ship_properties import ShipProperties
 from ship_state.ship_state import ShipState
 
@@ -18,5 +19,8 @@ class ShipManager:
         # TODO
         ...
 
-    def get_next_objective_coo(self):
+    def step(self) -> None:
+        ...
+
+    def get_next_objective_coo(self) -> ObjectiveCoordinate:
         return self.ship_state.route[0]
