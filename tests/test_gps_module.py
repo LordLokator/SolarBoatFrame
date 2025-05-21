@@ -1,4 +1,4 @@
-# --- .tests/test_gps_module.py ---
+# tests/test_gps_module.py
 
 import unittest
 from copy import deepcopy as copy
