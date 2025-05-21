@@ -7,7 +7,7 @@ import warnings
 import os
 
 # Setup logging
-LOG_PATH = os.path.abspath(os.path.join("logging", "app.log"))
+LOG_PATH = os.path.abspath(os.path.join("logging", "coordinates.log"))
 
 logger.add(
     LOG_PATH,

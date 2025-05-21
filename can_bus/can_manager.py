@@ -1,4 +1,16 @@
 import can
+from loguru import logger
+import os
+
+LOG_PATH = os.path.abspath(os.path.join("logging", "CAN_logs.log"))
+
+logger.add(
+    LOG_PATH,
+    level="DEBUG",
+    rotation="500 KB",
+    backtrace=True,
+    diagnose=True
+)
 
 
 class CANManager:
