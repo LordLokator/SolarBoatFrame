@@ -3,6 +3,9 @@
 import os
 from threading import Lock
 from loguru import logger
+
+from gps_coordinate.geofence import CircularGeofence, PolygonalGeofence
+from gps_coordinate.objective import ObjectiveCoordinate
 from .base import GPSPoint
 
 # Setup logging
@@ -28,7 +31,7 @@ class ShipPosition(GPSPoint):
                 cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, latitude=0.0, longitude=0.0):
+    def __init__(self, latitude=0.0, longitude=0.0, geofence: CircularGeofence | PolygonalGeofence = None):
 
         # Ha nem létezik a '__initialized' attributum, hamisnak vesszük;
         if not getattr(self, '__initialized', False):
@@ -37,6 +40,16 @@ class ShipPosition(GPSPoint):
             # '"__initialized" is not accessed - Pylance' ->
             # A 'getattr' igenis eléri, csak ezt a linter nem tudja szegény
             self.__initialized = True
+            self.geofence = geofence
 
-    def update_position(self, new_lat, new_lon):
-        self.set_coordinates(new_lat, new_lon)
+    def update_position(self, new_objective: ObjectiveCoordinate):
+
+        if not self.geofence.contains(self.get_coordinates()):
+            logger.warning("Attempted to move outside geofence!")
+            return
+
+        self.set_coordinates(new_objective)
+
+    def is_within_geofence(self) -> bool:
+        ship_in_geofence = self.geofence.contains(self.get_coordinates())
+        return ship_in_geofence
