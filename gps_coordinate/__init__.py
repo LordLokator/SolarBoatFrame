@@ -1,3 +1,5 @@
+# __init__.py
+
 from .base import GPSPoint
 from .ship_position import ShipPosition
 from .buoy import BuoyPosition

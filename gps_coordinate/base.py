@@ -1,7 +1,8 @@
+# base.py
+
 from threading import Lock
 from math import radians, cos, sin, asin, sqrt
 from loguru import logger
-from typing import Optional
 import os
 
 # Setup logging
@@ -60,4 +61,3 @@ class GPSPoint:
 
     def __repr__(self):
         return f"GPSPoint(lat={self.latitude}, lon={self.longitude})"
-

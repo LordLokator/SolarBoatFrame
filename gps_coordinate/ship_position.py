@@ -1,3 +1,5 @@
+# ship_position.py
+
 import os
 from threading import Lock
 from loguru import logger
@@ -32,7 +34,7 @@ class ShipPosition(GPSPoint):
         if not getattr(self, '__initialized', False):
             super().__init__(latitude, longitude)
 
-            # '"__initialized" is not accessed' ->
+            # '"__initialized" is not accessed - Pylance' ->
             # A 'getattr' igenis eléri, csak ezt a linter nem tudja szegény
             self.__initialized = True
 
