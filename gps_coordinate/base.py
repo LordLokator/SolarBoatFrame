@@ -3,6 +3,7 @@
 from threading import Lock
 from math import radians, cos, sin, asin, sqrt
 from loguru import logger
+import warnings
 import os
 
 # Setup logging
@@ -30,7 +31,22 @@ class GPSPoint:
         with self._lock:
             return self.latitude, self.longitude
 
-    def set_coordinates(self, lat, lon):
+    def set_coordinates(self, coords: 'GPSPoint'):
+        with self._lock:
+            lat, lon = coords.get_coordinates()
+
+            logger.debug(f"Setting coordinates from ({self.latitude}, {self.longitude}) to ({lat}, {lon})")
+            self.latitude = lat
+            self.longitude = lon
+
+    def __set_coordinates(self, lat: float, lon: float):
+        # This method is kept for emergencies.
+        # Do not use it.
+        # Setting these attributes manually is a crime against OOP.
+
+        warnings.warn("This is a fallback method for setting coordinates. \
+                      Use the more OOP 'set_coordinates' instead.", DeprecationWarning)
+
         with self._lock:
             msg = f"Setting coordinates from ({self.latitude}, {self.longitude}) to ({lat}, {lon})"
             logger.debug(msg)
