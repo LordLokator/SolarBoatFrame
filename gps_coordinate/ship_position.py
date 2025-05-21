@@ -25,7 +25,7 @@ class ShipPosition(GPSPoint):
     _singleton_lock = Lock()
     _lock = Lock()
 
-    def __new__(cls, latitude=0.0, longitude=0.0):
+    def __new__(cls, latitude=0.0, longitude=0.0, geofence = None):
         with cls._singleton_lock:
             if cls._instance is None:
                 cls._instance = super().__new__(cls)
@@ -42,14 +42,16 @@ class ShipPosition(GPSPoint):
             self.__initialized = True
             self.geofence = geofence
 
-    def update_position(self, new_objective: ObjectiveCoordinate):
+    def update_position(self, new_objective: ObjectiveCoordinate) -> bool:
 
-        if not self.geofence.contains(self.get_coordinates()):
+        if not self.geofence.contains(new_objective):
             logger.warning("Attempted to move outside geofence!")
-            return
+            return False
 
-        self.set_coordinates(new_objective)
+        else:
+            self.set_coordinates(new_objective)
+            return True
 
     def is_within_geofence(self) -> bool:
-        ship_in_geofence = self.geofence.contains(self.get_coordinates())
+        ship_in_geofence = self.geofence.contains(self)
         return ship_in_geofence
