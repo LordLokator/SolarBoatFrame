@@ -1,3 +1,16 @@
+# Nincs validálva!
+
+Bálint: validáltam ekkor: ####
+
+Berni: validáltam ekkor: ####
+
+Regina: validáltam ekkor: ####
+
+Tamás: validáltam ekkor: ####
+
+---
+
+
 | Symbol           | Name                       | Equation / Value                             | Short Description                      |
 | ---------------- | -------------------------- | -------------------------------------------- | -------------------------------------- |
 | $x, y$           | Position                   | –                                            | Ship's position in Earth-fixed frame   |
@@ -30,3 +43,25 @@
 | $\delta_c$       | Controller output          | $u_{PD} + u_{PI}$                            | Rudder angle command                   |
 | $a, b$           | Nomoto model coeffs        | $a = -1/T, b = K/T$                          | First-order yaw dynamics               |
 | $k_1..k_4$       | Controller gains           | PDPI: 1.6, 19.92, 2.125, 92.1                | Gains from pole placement              |
+
+
+
+# HIBÁS, de a formázás értékes. TODO: Javítani!
+
+Hiba pl az összes $d_{xy}$ alakú tagnál!
+
+---
+
+| Symbol           | Name                       | Equation / Value                             | Short Description                      |
+| ---------------- | -------------------------- | -------------------------------------------- | -------------------------------------- |
+| $ R(\psi) $ | Rotation matrix             |   $R(\psi) = \begin{bmatrix} \cos\psi & -\sin\psi & 0 \\ \sin\psi & \cos\psi & 0 \\ 0 & 0 & 1 \end{bmatrix}$   | Transforms velocity from body to Earth frame |
+|   $M$         | Inertia matrix              |   $M = \begin{bmatrix} m - X_{\dot{u}} & 0 & 0 \\ 0 & m - Y_{\dot{v}} & m x_G - Y_{\dot{r}} \\ 0 & m x_G - N_{\dot{v}} & I_z - N_{\dot{r}} \end{bmatrix}$   | Accounts for mass, added mass, inertia        |
+|   $C(\nu)$    | Coriolis/Centripetal matrix |   $C(\nu) = \begin{bmatrix} 0 & 0 & -m(x_G r + v) \\ 0 & 0 & m u \\ m(x_G r + v) & -m u & 0 \end{bmatrix}$   | Nonlinear velocity-dependent effects          |
+|   $D(\nu)$    | Damping matrix              |   $D(\nu) = \begin{bmatrix} d_{11} & 0 & 0 \\ 0 & d_{22}(\nu) & d_{23}(\nu) \\ 0 & d_{32}(\nu) & d_{33}(\nu) \end{bmatrix}$   | Hydrodynamic damping based on velocity        |
+|   $d_{22}(\nu)$   | Sway damping term       |   $d_{22}(v)$ = $Y_{v\|v\|}$ + \|r\| $Y_{r\|r\|}$                                  | Nonlinear sway damping                         |
+|   $d_{23}(\nu)$   | Cross damping term      |   $d_{23}(v)$ = $Y_{v\|r\|}$ + \|r\| $Y_{r\|v\|}$                                  | Cross-coupling term                           |
+|   $d_{32}(\nu)$   | Cross damping term      |   $d_{32}(v)$ = $N_{v\|r\|}$ + \|r\| $N_{r\|v\|}$                                  | Cross-coupling term                           |
+|   $d_{33}(\nu)$   | Yaw damping term        |   $d_{33}(v)$ = $N_{v\|v\|}$ + \|r\| $N_{r\|r\|}$                                  | Yaw resistance                                 |
+|   $\tau$      | Total forces/torques        |   $\tau = \tau_{hull} + \tau_{thrust} + \tau_{env}$                      | Sum of internal + propeller + external forces |
+|   $\tau = [X, Y, N]^T$   | Force vector    |   $\begin{bmatrix} T - k_T^n n_g^2 \\ -Y_\delta \delta \\ -N_\delta \delta \end{bmatrix}$   | Forces in x, y and yaw moment                 |
+|   $\delta_c$   | PDPI control law           |   $\delta_c = k_1 e_\psi + k_2 \dot{e}_\psi + k_3 e_y + k_4 \int e_y dt$   | Final rudder command from controller          |
