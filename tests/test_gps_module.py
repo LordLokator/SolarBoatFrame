@@ -1,5 +1,6 @@
 # tests/test_gps_module.py
 
+import os
 import unittest
 from copy import deepcopy as copy
 import threading
@@ -11,22 +12,22 @@ LOG_PATH = os.path.abspath(os.path.join("logging", "test_gps_module.log"))
 
 logger.add(
     LOG_PATH,
-    level="DEBUG",
+    level="WARNING",
     rotation="500 KB",
     backtrace=True,
     diagnose=True
 )
 
 # Tihanyi rév [EPSG:4326]
-TIHANY_LAN = 46.88868997786068
+TIHANY_LAT = 46.88868997786068
 TIHANY_LON = 17.89171566948177
 
 # Szántódi rév [EPSG:4326]
-SZANTOD_LAN = 46.87993481783788
+SZANTOD_LAT = 46.87993481783788
 SZANTOD_LON = 17.89972984313507
 
 # BME K [EPSG:4326]
-BMEK_LAN = 47.48147848232312
+BMEK_LAT = 47.48147848232312
 BMEK_LON = 19.05566975662944
 
 # BME K [EPSG:32633]
@@ -65,7 +66,7 @@ class TestShipPosition(unittest.TestCase):
         self.assertIs(p1, p2)  # if truly singleton -> this holds
 
     def test_thread_safety_update(self):
-        init_lat = copy(TIHANY_LAN)
+        init_lat = copy(TIHANY_LAT)
         init_lon = copy(TIHANY_LON)
 
         fence = CircularGeofence(GPSPoint(init_lat, init_lon), 5000)  # 5km
@@ -75,7 +76,7 @@ class TestShipPosition(unittest.TestCase):
         def thread_job():
             for _ in range(5):
                 success = ship.update_position(ObjectiveCoordinate(
-                    copy(SZANTOD_LAN),
+                    copy(SZANTOD_LAT),
                     copy(SZANTOD_LON)
                 ))
                 assert success, "Geofence stopped you from having a good day!"
@@ -87,20 +88,20 @@ class TestShipPosition(unittest.TestCase):
             t.join()
 
         lat, lon = ship.get_coordinates()
-        self.assertIn((lat, lon), [(copy(SZANTOD_LAN), copy(SZANTOD_LON))])
+        self.assertIn((lat, lon), [(copy(SZANTOD_LAT), copy(SZANTOD_LON))])
 
 
 class TestBuoyPosition(unittest.TestCase):
     def test_within_radius(self):
 
         # Tihanyi rév
-        lan_1 = copy(TIHANY_LAN)
+        lan_1 = copy(TIHANY_LAT)
         lon_1 = copy(TIHANY_LON)
 
         buoy = BuoyPosition(lan_1, lon_1, 2000)  # 2km [real: 1.1km]
 
         # Szántódi rév
-        lan_2 = copy(SZANTOD_LAN)
+        lan_2 = copy(SZANTOD_LAT)
         lon_2 = copy(SZANTOD_LON)
         p = GPSPoint(lan_2, lon_2)
 
@@ -109,14 +110,14 @@ class TestBuoyPosition(unittest.TestCase):
     def test_outside_radius(self):
 
         # Tihanyi rév
-        lan_1 = copy(TIHANY_LAN)
+        lan_1 = copy(TIHANY_LAT)
         lon_1 = copy(TIHANY_LON)
 
         buoy = BuoyPosition(lan_1, lon_1, 100)  # 100m [real: 1100m]
 
         # Szántódi rév
-        lan_2 = copy(SZANTOD_LAN)
-        lon_2 = copy(SZANTOD_LAN)
+        lan_2 = copy(SZANTOD_LAT)
+        lon_2 = copy(SZANTOD_LAT)
         p = GPSPoint(lan_2, lon_2)
 
         self.assertTrue(not buoy.is_within_radius(p))

@@ -4,7 +4,7 @@ import unittest
 from ship_state.ship_properties import ShipProperties
 
 # Szántódi rév
-SZANTOD_LAN = 46.87993481783788
+SZANTOD_LAT = 46.87993481783788
 SZANTOD_LON = 17.89972984313507
 
 
