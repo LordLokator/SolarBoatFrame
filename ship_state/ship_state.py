@@ -6,21 +6,17 @@ from gps_coordinate import ObjectiveCoordinate, ShipPosition
 
 class ShipState:
     """Manages the dynamic properties of the ship, like current position
-
-    Returns:
-        _type_: _description_
     """
 
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls, starting_position):
         if cls._instance is None:
-            if not cls._instance:
-                cls._instance = super().__new__(cls)
+            cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self):
-        self.current_position: ShipPosition = ShipPosition()
+    def __init__(self, starting_position: ShipPosition):
+        self.current_position: ShipPosition = starting_position
         self.route: list[ObjectiveCoordinate] = [] # init?
 
         # TODO
