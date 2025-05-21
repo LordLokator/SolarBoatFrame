@@ -1,4 +1,4 @@
-# ship_state.py
+# ship_state/ship_state.py
 """Ide kellenek a dinamikus tulajdonságok."""
 
 from gps_coordinate import ObjectiveCoordinate, ShipPosition
