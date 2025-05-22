@@ -15,7 +15,7 @@ class TestGPSPoint(unittest.TestCase):
         starting_positio = GPSPoint(copy(SZANTOD_LAT), copy(SZANTOD_LON))
         props = ShipState(starting_positio)
 
-        self.assertTrue(True)
+        self.assertTrue(props)
 
 
 if __name__ == '__main__':
