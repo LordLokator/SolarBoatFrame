@@ -7,6 +7,8 @@ from loguru import logger
 import warnings
 import os
 
+from .config import WGS84_GPS, EPSG_32634_BP
+
 # Setup logging
 LOG_PATH = os.path.abspath(os.path.join("logging", "coordinates.log"))
 
@@ -26,8 +28,8 @@ class GPSPoint:
         self.Xn = None
         self.Yn = None
 
-        self._crs_geodetic = CRS.from_epsg(4326)  # WGS84
-        self._crs_projected = CRS.from_epsg(32634)  # UTM zone 34N (EPSG:32634)
+        self._crs_geodetic = CRS.from_epsg(WGS84_GPS)
+        self._crs_projected = CRS.from_epsg(EPSG_32634_BP)
         self._transformer = Transformer.from_crs(
             self._crs_geodetic,
             self._crs_projected,
