@@ -35,11 +35,14 @@ class GPSPoint:
 
         self.update_projected_coordinates()
 
+        if EPSG_32634_BP != self._utm_zone():
+            logger.warning(f"UTM Zone mismatch! Calculated: [{self._utm_zone()}] | Used: [{EPSG_32634_BP}]")
+
         msg = f"Initialized GPSPoint: ({self.latitude}, {self.longitude})"
         logger.debug(msg)
 
-    # def _utm_zone(self):
-    #     return int((self.longitude + 180) / 6) + 1
+    def _utm_zone(self):
+        return int((self.longitude + 180) / 6) + 1
 
     def update_projected_coordinates(self) -> None:
         with self._lock:
