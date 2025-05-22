@@ -24,10 +24,10 @@ class ShipState:
         self.route: list[ObjectiveCoordinate] = []  # init?
         self.properties = BlueLadyShipProperties()
 
-        self.psi: float  # heading in radians (w.r.t North)
-        self.u: float  # surge speed
-        self.v: float  # sway speed
-        self.r: float  # yaw rate
+        self.psi: float = 0.0  # heading in radians (w.r.t North)
+        self.u: float = 0.0  # surge speed
+        self.v: float = 0.0  # sway speed
+        self.r: float = 0.0  # yaw rate
 
     # region Properties
     @property
@@ -91,7 +91,7 @@ class ShipState:
         ])
 
     def get_body_referenced_coordinates(self, reference) -> tuple[float, float]:
-        Xb, Yb = self.current_position.__get_body_referenced_coordinates(
+        Xb, Yb = self.current_position._get_body_referenced_coordinates(
             reference=reference,
             heading_psi=self.psi
         )

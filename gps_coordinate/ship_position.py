@@ -46,7 +46,7 @@ class ShipPosition(GPSPoint):
 
     # endregion
 
-    def __get_body_referenced_coordinates(self, reference: GPSPoint, heading_psi: float) -> tuple[float, float]:
+    def _get_body_referenced_coordinates(self, reference: GPSPoint, heading_psi: float) -> tuple[float, float]:
         """Returns a body-referenced coordinate pair of (Xb, Yb).
 
         Args:
