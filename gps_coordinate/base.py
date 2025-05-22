@@ -30,10 +30,6 @@ class GPSPoint:
         self._lock = Lock()
         self.latitude = latitude
         self.longitude = longitude
-        self.Xn: float = None
-        self.Yn: float = None
-
-        self.update_projected_coordinates()
 
         if EPSG_32634_BP != self._utm_zone():
             logger.warning(f"UTM Zone mismatch! Calculated: [{self._utm_zone()}] | Used: [{EPSG_32634_BP}]")
@@ -41,13 +37,18 @@ class GPSPoint:
         msg = f"Initialized GPSPoint: ({self.latitude}, {self.longitude})"
         logger.debug(msg)
 
+    @property
+    def Xn(self) -> float:
+        x, _ = self._TRANSFORMER.transform(self.longitude, self.latitude)
+        return x
+
+    @property
+    def Yn(self) -> float:
+        _, y = self._TRANSFORMER.transform(self.longitude, self.latitude)
+        return y
+
     def _utm_zone(self):
         return int((self.longitude + 180) / 6) + 1
-
-    def update_projected_coordinates(self) -> None:
-        with self._lock:
-            self.Xn, self.Yn = self._TRANSFORMER.transform(self.longitude, self.latitude)
-            logger.debug(f"Updated projected coordinates: Xn={self.Xn:.2f}, Yn={self.Yn:.2f}")
 
     def get_coordinates(self) -> tuple[float, float]:
         with self._lock:
