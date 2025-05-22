@@ -31,7 +31,7 @@ class GPSPoint:
         self.latitude = latitude
         self.longitude = longitude
 
-        if EPSG_32634_BP != self._utm_zone():
+        if not str(EPSG_32634_BP).endswith(str(self._utm_zone())):
             logger.warning(f"UTM Zone mismatch! Calculated: [{self._utm_zone()}] | Used: [{EPSG_32634_BP}]")
 
         msg = f"Initialized GPSPoint: ({self.latitude}, {self.longitude})"
