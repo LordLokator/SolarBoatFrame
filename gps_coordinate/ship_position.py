@@ -4,8 +4,8 @@ import os
 from threading import Lock
 from loguru import logger
 
-from gps_coordinate.geofence import CircularGeofence, PolygonalGeofence
-from gps_coordinate.objective import ObjectiveCoordinate
+from .geofence import CircularGeofence, PolygonalGeofence
+from .objective import ObjectiveCoordinate
 from .base import GPSPoint
 
 # Setup logging
