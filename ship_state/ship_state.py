@@ -3,6 +3,7 @@
 
 import numpy as np
 from gps_coordinate import ObjectiveCoordinate, ShipPosition
+from .ship_properties import ShipProperties
 
 
 class ShipState:
@@ -19,6 +20,7 @@ class ShipState:
     def __init__(self, starting_position: ShipPosition):
         self.current_position: ShipPosition = starting_position
         self.route: list[ObjectiveCoordinate] = []  # init?
+        self.properties = ShipProperties()
 
         self.x: float  # Earth-fixed x
         self.y: float  # Earth-fixed y
