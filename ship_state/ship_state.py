@@ -4,7 +4,7 @@
 from loguru import logger
 import numpy as np
 from gps_coordinate import ObjectiveCoordinate, ShipPosition
-from .ship_properties import ShipProperties
+from .ship_properties import BlueLadyShipProperties
 
 
 class ShipState:
@@ -21,7 +21,7 @@ class ShipState:
     def __init__(self, starting_position: ShipPosition):
         self.current_position: ShipPosition = starting_position
         self.route: list[ObjectiveCoordinate] = []  # init?
-        self.properties = ShipProperties()
+        self.properties = BlueLadyShipProperties()
 
         self.psi: float  # heading in radians (w.r.t North)
         self.u: float  # surge speed
