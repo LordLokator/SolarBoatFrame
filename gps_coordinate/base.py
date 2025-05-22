@@ -98,5 +98,11 @@ class GPSPoint:
         logger.debug(f"Calculated Haversine distance: {distance:.2f} meters")
         return distance
 
+    def ned_offset_from(self, origin: 'GPSPoint') -> tuple[float, float]:
+        with self._lock:
+            north = self.Yn - origin.Yn
+            east = self.Xn - origin.Xn
+            return north, east
+
     def __repr__(self) -> str:
         return f"GPSPoint(lat={self.latitude}, lon={self.longitude})"
