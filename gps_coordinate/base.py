@@ -25,8 +25,8 @@ class GPSPoint:
         self._lock = Lock()
         self.latitude = latitude
         self.longitude = longitude
-        self.Xn = None
-        self.Yn = None
+        self.Xn: float = None
+        self.Yn: float = None
 
         self._crs_geodetic = CRS.from_epsg(WGS84_GPS)
         self._crs_projected = CRS.from_epsg(EPSG_32634_BP)
