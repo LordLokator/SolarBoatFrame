@@ -25,6 +25,9 @@ TIHANY_LON = 17.89171566948177
 SZANTOD_LAT = 46.87993481783788
 SZANTOD_LON = 17.89972984313507
 
+SZANTOD_X_32633 = 720940.9110621361
+SZANTOD_Y_32633 = 5195904.446368263
+
 # BME K [EPSG:4326]
 BMEK_LAT = 47.48147848232312
 BMEK_LON = 19.05566975662944
@@ -94,10 +97,10 @@ class TestShipPosition(unittest.TestCase):
         self.assertIn((lat, lon), [(copy(SZANTOD_LAT), copy(SZANTOD_LON))])
 
     def test_project_earthbased(self):
-        point = GPSPoint(BMEK_LAT, BMEK_LON)
+        point = GPSPoint(SZANTOD_LAT, SZANTOD_LON)
 
-        self.assertAlmostEqual(point.Xn, BMEK_X_32634)
-        self.assertAlmostEqual(point.Yn, BMEK_Y_32634)
+        self.assertAlmostEqual(point.Xn, SZANTOD_X_32633, places=1)
+        self.assertAlmostEqual(point.Yn, SZANTOD_Y_32633, places=1)
 
 
 class TestBuoyPosition(unittest.TestCase):

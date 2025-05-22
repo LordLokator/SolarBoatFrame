@@ -7,7 +7,12 @@ from loguru import logger
 import warnings
 import os
 
-from .config import WGS84_GPS, EPSG_32634_BP
+from .config import (
+    WGS84_GPS,
+    EPSG_32634_BP,
+    EPSG_32633_BALATON,
+    EPSG_32632_MONACO
+)
 
 # Setup logging
 LOG_PATH = os.path.abspath(os.path.join("logging", "coordinates.log"))
@@ -22,9 +27,12 @@ logger.add(
 
 class GPSPoint:
 
-    _CRS_GEODETIC = CRS.from_epsg(WGS84_GPS)
-    _CRS_PROJECTED = CRS.from_epsg(EPSG_32634_BP)
-    _TRANSFORMER = Transformer.from_crs(_CRS_GEODETIC, _CRS_PROJECTED, always_xy=True)
+    # _CRS_GEODETIC = CRS.from_epsg(WGS84_GPS)
+    # _CRS_PROJECTED = CRS.from_epsg(EPSG_32633_BALATON)
+    # _TRANSFORMER = Transformer.from_crs(_CRS_GEODETIC, _CRS_PROJECTED, always_xy=True)
+
+    _TRANSFORMER = Transformer.from_crs(WGS84_GPS, EPSG_32633_BALATON, always_xy=True)
+    # transformer_to_wgs = Transformer.from_crs(EPSG_32633_BALATON, WGS84_GPS, always_xy=True)
 
     def __init__(self, latitude: float, longitude: float):
         self._lock = Lock()
