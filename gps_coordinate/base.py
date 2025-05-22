@@ -21,6 +21,11 @@ logger.add(
 
 
 class GPSPoint:
+
+    _CRS_GEODETIC = CRS.from_epsg(WGS84_GPS)
+    _CRS_PROJECTED = CRS.from_epsg(EPSG_32634_BP)
+    _TRANSFORMER = Transformer.from_crs(_CRS_GEODETIC, _CRS_PROJECTED, always_xy=True)
+
     def __init__(self, latitude: float, longitude: float):
         self._lock = Lock()
         self.latitude = latitude
@@ -28,32 +33,24 @@ class GPSPoint:
         self.Xn: float = None
         self.Yn: float = None
 
-        self._crs_geodetic = CRS.from_epsg(WGS84_GPS)
-        self._crs_projected = CRS.from_epsg(EPSG_32634_BP)
-        self._transformer = Transformer.from_crs(
-            self._crs_geodetic,
-            self._crs_projected,
-            always_xy=True
-        )
-
         self.update_projected_coordinates()
 
         msg = f"Initialized GPSPoint: ({self.latitude}, {self.longitude})"
         logger.debug(msg)
 
-    def _utm_zone(self):
-        return int((self.longitude + 180) / 6) + 1
+    # def _utm_zone(self):
+    #     return int((self.longitude + 180) / 6) + 1
 
-    def update_projected_coordinates(self):
+    def update_projected_coordinates(self) -> None:
         with self._lock:
-            self.Xn, self.Yn = self._transformer.transform(self.longitude, self.latitude)
+            self.Xn, self.Yn = self._TRANSFORMER.transform(self.longitude, self.latitude)
             logger.debug(f"Updated projected coordinates: Xn={self.Xn:.2f}, Yn={self.Yn:.2f}")
 
-    def get_coordinates(self):
+    def get_coordinates(self) -> tuple[float, float]:
         with self._lock:
             return self.latitude, self.longitude
 
-    def set_coordinates(self, coords: 'GPSPoint'):
+    def set_coordinates(self, coords: 'GPSPoint') -> None:
         with self._lock:
             lat, lon = coords.get_coordinates()
 
@@ -61,7 +58,7 @@ class GPSPoint:
             self.latitude = lat
             self.longitude = lon
 
-    def __set_coordinates(self, lat: float, lon: float):
+    def __set_coordinates(self, lat: float, lon: float) -> None:
         # This method is kept for emergencies.
         # Do not use it.
         # Setting these attributes manually is a crime against OOP.
@@ -97,5 +94,5 @@ class GPSPoint:
         logger.debug(f"Calculated Haversine distance: {distance:.2f} meters")
         return distance
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"GPSPoint(lat={self.latitude}, lon={self.longitude})"
