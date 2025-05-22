@@ -46,6 +46,21 @@ class ShipPosition(GPSPoint):
 
     # endregion
 
+    def __get_body_referenced_coordinates(self, reference: GPSPoint, heading_psi: float) -> tuple[float, float]:
+        """Returns a body-referenced coordinate pair of (Xb, Yb).
+
+        Args:
+            reference (GPSPoint): Reference point.
+
+        Returns:
+            tuple[float, float]: (Xb, Yb)
+        """
+        north, east = self.ned_offset(reference)
+
+        Xb = cos(heading_psi) * north + sin(heading_psi) * east
+        Yb = -sin(heading_psi) * north + cos(heading_psi) * east
+        return (Xb, Yb)
+
     def ned_offset(self, reference_point: GPSPoint) -> tuple[float, float]:
         """
         NED offset relative to a fixed Earth frame origin.
