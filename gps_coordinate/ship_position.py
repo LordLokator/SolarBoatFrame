@@ -44,26 +44,6 @@ class ShipPosition(GPSPoint):
 
     # region properties
 
-    @property
-    def heading_psi(self) -> float:
-        """Ship heading in radians"""
-        with self._lock:
-            return getattr(self, "_heading_psi", 0.0)
-
-    @property
-    def Xb(self) -> float:
-        north, east = self.ned_offset()
-        psi = self.heading_psi
-        Xb = cos(psi) * north + sin(psi) * east
-        return Xb
-
-    @property
-    def Yb(self) -> float:
-        north, east = self.ned_offset()
-        psi = self.heading_psi
-        Yb = -sin(psi) * north + cos(psi) * east
-        return Yb
-
     # endregion
 
     def ned_offset(self, reference_point: GPSPoint) -> tuple[float, float]:
