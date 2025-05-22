@@ -13,7 +13,6 @@ LOG_PATH = os.path.abspath(os.path.join("logging", "test_gps_module.log"))
 logger.add(
     LOG_PATH,
     level="WARNING",
-    rotation="500 KB",
     backtrace=True,
     diagnose=True
 )

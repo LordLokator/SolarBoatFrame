@@ -10,7 +10,6 @@ LOG_PATH = os.path.abspath(os.path.join("logging", "coordinates.log"))
 logger.add(
     LOG_PATH,
     level="DEBUG",
-    rotation="500 KB",
     backtrace=True,
     diagnose=True
 )
