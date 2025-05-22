@@ -8,7 +8,7 @@ Cartesian 2D coordinate system.
 - Axes: (E,N)
 - Orientations: east, north
 - Unit: m
-- Coverage: 18°E and 24°E, northern hemisphere between equator and 84°N.
+- Coverage: **18°E** and **24°E**, northern hemisphere between equator and 84°N.
 """
 
 EPSG_32633_BALATON = 32633
@@ -18,7 +18,7 @@ Cartesian 2D CS
 - Axes: (E,N)
 - Orientations: east, north
 - Unit: m
-- Coverage: 12°E and 18°E, northern hemisphere between equator and 84°N.
+- Coverage: **12°E** and **18°E**, northern hemisphere between equator and 84°N.
 """
 
 EPSG_32632_MONACO = 32632
@@ -28,7 +28,7 @@ Cartesian 2D CS
 - Axes: (E,N)
 - Orientations: east, north
 - Unit: m
-- Coverage: 6°E and 12°E, northern hemisphere between equator and 84°N
+- Coverage: **6°E** and **12°E**, northern hemisphere between equator and 84°N
 """
 
 WGS84_GPS = 4326
