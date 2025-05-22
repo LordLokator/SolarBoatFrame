@@ -1,6 +1,7 @@
 # ship_state/ship_state.py
 """Ide kellenek a dinamikus tulajdonságok."""
 
+from loguru import logger
 import numpy as np
 from gps_coordinate import ObjectiveCoordinate, ShipPosition
 from .ship_properties import ShipProperties
@@ -22,12 +23,30 @@ class ShipState:
         self.route: list[ObjectiveCoordinate] = []  # init?
         self.properties = ShipProperties()
 
-        self.x: float  # Earth-fixed x
-        self.y: float  # Earth-fixed y
         self.psi: float  # heading in radians (w.r.t North)
         self.u: float  # surge speed
         self.v: float  # sway speed
         self.r: float  # yaw rate
+
+    @property
+    def Xn(self):
+        Xn = self.current_position.Xn
+        if Xn is None or not isinstance(Xn, float):
+            err_msg = f"Xn is supposed to be of type float, it is instead [{type(Xn)}] with value [{Xn}]!"
+            logger.critical(err_msg)
+            raise ValueError(err_msg)
+
+        return Xn
+
+    @property
+    def Yn(self):
+        Yn = self.current_position.Yn
+        if Yn is None or not isinstance(Yn, float):
+            err_msg = f"Yn is supposed to be of type float, it is instead [{type(Yn)}] with value [{Yn}]!"
+            logger.critical(err_msg)
+            raise ValueError(err_msg)
+
+        return Yn
 
     def eta(self) -> np.ndarray:
         """Return position and heading vector in Earth-fixed frame."""
