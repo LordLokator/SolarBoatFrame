@@ -22,6 +22,7 @@ class ShipState:
         self.origin_position: ShipPosition = starting_position
         self.current_position: ShipPosition = starting_position
         self.route: list[ObjectiveCoordinate] = []  # init?
+        self.current_segment: ObjectiveCoordinate = None # init? -> the first segment in the route list?
         self.properties = BlueLadyShipProperties()
 
         self.psi: float = 0.0  # heading in radians (w.r.t North)
@@ -96,6 +97,23 @@ class ShipState:
             heading_psi=self.psi
         )
         return (Xb, Yb)
+
+    def psi_k(self) -> float:
+        """Calculate the heading angle IN RADIANS of the current and the next segment."""
+        if self.route is None or len(self.route) < 2:
+            err_msg = "Route is not set or has less than 2 points!"
+            logger.critical(err_msg)
+            raise ValueError(err_msg)
+        if self.current_segment is None:
+            err_msg = "Current segment is not set!"
+            logger.critical(err_msg)
+            raise ValueError(err_msg)
+        if self.route.index(self.current_segment) == len(self.route) - 1:
+            err_msg = "Current segment is the last one in the route, cannot calculate heading of next segment!"
+            logger.critical(err_msg)
+            raise ValueError(err_msg)
+        next_segment = self.route[self.route.index(self.current_segment) + 1]
+
 
         # TODO
         ...
