@@ -57,20 +57,15 @@ This repository contains the **Autonomous Ship Control Framework**, a modular sy
 
 ```plaintext
 📂 SolarBoatFrame
-├── 📁 logging           # Logging entire framework
-│   ├── logs.csv
-│   └── logger.py
-├── 📁 can_bus           # CAN communication logic
-│   ├── can_manager.py
-│   └── device_drivers/
-├── 📁 communication     # 4G and data relay modules
-│   └── whatever.py
-├── 📁 decision_module   # Integration with decision-making logic
-│   ├── top_level_interface.py
-│   └── algorithms/
-├── 📂 tests             # Unit and integration tests
-├── 📂 documentation     # docs
-└── README.md            # Project documentation
+├── 4g                  # (Unimplemented) 4G networking interface
+├── can_bus             # High level CAN interface and manager
+├── documentation       # Any documentation regarding the Project
+├── gps_coordinate      # Coordinate representation classes
+│   └── geofence        # Geofence implementation
+├── logging             # All logfiles
+├── ship_state          # Current ship state and ship properties
+├── tests               # All unit tests for the Project
+└── README.md           # This document
 ```
 
 ---
@@ -84,10 +79,18 @@ You need root privileges for the setupper.
       sudo chmod +x setup_env.sh
       ```
 
-2. Make the setup bash script executable:
-      ```bash
-      ./setup_env.sh
-      ```
+2. python main.py is the entry point.
+
+---
+
+## Testing
+
+From the root, use this command in terminal:
+
+
+  ```python
+  pytest tests/
+  ```
 
 ---
 
