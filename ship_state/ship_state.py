@@ -50,12 +50,24 @@ class ShipState:
 
         return Yn
 
+    @property
+    def state_vector(self) -> np.ndarray:
+        """(Equation 1)
+
+        Returns:
+            np.ndarray: A vector in R⁶ describing the current state vector of the ship.
+        """
+        return np.concatenate((self.eta, self.nu))
+
+    @property
     def eta(self) -> np.ndarray:
         """Return position and heading vector in Earth-fixed frame."""
-        return np.array([self.x, self.y, self.psi])
+        return np.array([self.Xn, self.Yn, self.psi])
 
+    @property
     def nu(self) -> np.ndarray:
-        """Return velocity vector in Body-fixed frame."""
+        """Return position and heading vector in body-fixed frame."""
+        self.current_position.ned_offset_from(self.origin_position)
         return np.array([self.u, self.v, self.r])
 
     # endregion
@@ -77,6 +89,13 @@ class ShipState:
             [s,  c, 0],
             [0,  0, 1]
         ])
+
+    def get_body_referenced_coordinates(self, reference) -> tuple[float, float]:
+        Xb, Yb = self.current_position.__get_body_referenced_coordinates(
+            reference=reference,
+            heading_psi=self.psi
+        )
+        return (Xb, Yb)
 
         # TODO
         ...
