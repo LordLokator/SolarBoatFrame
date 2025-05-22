@@ -19,6 +19,7 @@ class ShipState:
         return cls._instance
 
     def __init__(self, starting_position: ShipPosition):
+        self.origin_position: ShipPosition = starting_position
         self.current_position: ShipPosition = starting_position
         self.route: list[ObjectiveCoordinate] = []  # init?
         self.properties = BlueLadyShipProperties()
@@ -28,6 +29,7 @@ class ShipState:
         self.v: float  # sway speed
         self.r: float  # yaw rate
 
+    # region Properties
     @property
     def Xn(self):
         Xn = self.current_position.Xn
@@ -56,9 +58,7 @@ class ShipState:
         """Return velocity vector in Body-fixed frame."""
         return np.array([self.u, self.v, self.r])
 
-    def x_state(self) -> np.ndarray:
-        """Full state vector x = [eta.T, nu.T].T"""
-        return np.concatenate((self.eta(), self.nu()))
+    # endregion
 
     def eta_dot(self) -> np.ndarray:
         """Calculate Earth-frame velocity \u03b7_dot = R(psi) * nu (Equation 2)."""
