@@ -17,7 +17,7 @@ logger.add(
 )
 
 
-@dataclass
+@dataclass(frozen=True)
 class ShipProperties:
     length:         float = 0.0  # LOA
     breadth:        float = 0.0  # B
@@ -37,7 +37,7 @@ class ShipProperties:
         ))
 
 
-@dataclass
+@dataclass(frozen=True)
 class BlueLadyShipProperties:
 
     length:         float = 13.78   # LOA
@@ -58,7 +58,7 @@ class BlueLadyShipProperties:
         ))
 
 
-@dataclass
+@dataclass(frozen=True)
 class LanaShipProperties:
     # TODO: write Lana's config here
 

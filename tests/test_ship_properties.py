@@ -2,6 +2,7 @@
 
 import unittest
 from ship_state.ship_properties import ShipProperties
+from dataclasses import FrozenInstanceError
 
 # Szántódi rév
 SZANTOD_LAT = 46.87993481783788
@@ -19,6 +20,26 @@ class TestGPSPoint(unittest.TestCase):
         )
 
         self.assertTrue(True)
+
+    def test_frozen_attributes(self):
+        # Test ship properties' immutability
+
+        props = ShipProperties()
+
+        with self.assertRaises(FrozenInstanceError):
+            props.length = 20.0
+
+        with self.assertRaises(FrozenInstanceError):
+            props.breadth = 20.0
+
+        with self.assertRaises(FrozenInstanceError):
+            props.draft = 20.0
+
+        with self.assertRaises(FrozenInstanceError):
+            props.displacement = 20.0
+
+        with self.assertRaises(FrozenInstanceError):
+            props.x_g = 20.0
 
 
 if __name__ == '__main__':
