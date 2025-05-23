@@ -120,6 +120,13 @@ class ShipState:
         
     def L_k(self, index_of_current_segment: float) -> float:
         """return the distance before a waypoint at which a turning maneuver should start (equation 5)."""
+        psi_k_radian = self.psi_k(index_of_current_segment)
+        psi_k1_radian = self.psi_k(index_of_current_segment + 1)
+        if psi_k_radian is None or psi_k1_radian is None:
+            err_msg = "psi_k or psi_k1 is None!"
+            logger.critical(err_msg)
+            raise ValueError(err_msg)
+        delta_psi = psi_k1_radian - psi_k_radian
         a6 = 5.987527e-09
         a5 = -1.561371e-06
         a4 = 1.430259e-04
@@ -127,6 +134,9 @@ class ShipState:
         a2 = 0.01235089
         a1 = 2.10745127
         a0 = -0.02348713
+        #this is the equation 49 from the paper
+        # TODO: check the coefficients AND the units : degree or radian?
+        return a6 * delta_psi**6 + a5 * delta_psi**5 + a4 * delta_psi**4 + a3 * delta_psi**3 + a2 * delta_psi**2 + a1 * delta_psi + a0
 
 
         # TODO
