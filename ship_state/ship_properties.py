@@ -29,12 +29,7 @@ class BlueLadyShipProperties:
     def __post_init__(self):
         logger.warning("This is the Blue Lady's config for testing purposes!")
         logger.debug(dedent(
-            f"""{type(self).__name__} object, params: \
-                    | length: {self.length} \
-                    | breadth: {self.breadth} \
-                    | draft: {self.draft} \
-                    | displacement: {self.displacement} \
-                    | x_g: {self.x_g}"""
+            f"""{type(self).__name__} object, params: \n | length: {self.length} \n | breadth: {self.breadth} \n | draft: {self.draft} \n | displacement: {self.displacement} \n | x_g: {self.x_g}"""
         ))
 
 
@@ -51,10 +46,5 @@ class LanaShipProperties:
     def __post_init__(self):
         logger.info("Using Lana's config.")
         logger.debug(dedent(
-            f"""{type(self).__name__} object, params: \
-                    | length: {self.length} \
-                    | breadth: {self.breadth} \
-                    | draft: {self.draft} \
-                    | displacement: {self.displacement} \
-                    | x_g: {self.x_g}"""
+            f"""{type(self).__name__} object, params: \n | length: {self.length} \n | breadth: {self.breadth} \n | draft: {self.draft} \n | displacement: {self.displacement} \n | x_g: {self.x_g}"""
         ))
