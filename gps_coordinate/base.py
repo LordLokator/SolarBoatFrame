@@ -1,6 +1,6 @@
 # base.py
 
-from pyproj import Transformer, CRS
+from pyproj import Transformer
 from threading import Lock
 from math import radians, cos, sin, asin, sqrt
 from loguru import logger
@@ -27,13 +27,9 @@ logger.add(
 
 class GPSPoint:
 
-    # _CRS_GEODETIC = CRS.from_epsg(WGS84_GPS)
-    # _CRS_PROJECTED = CRS.from_epsg(EPSG_32633_BALATON)
-    # _TRANSFORMER = Transformer.from_crs(_CRS_GEODETIC, _CRS_PROJECTED, always_xy=True)
-
     _TRANSFORMER: Transformer = None
     # _TRANSFORMER = Transformer.from_crs(WGS84_GPS, EPSG_32633_BALATON, always_xy=True)
-    # transformer_to_wgs = Transformer.from_crs(EPSG_32633_BALATON, WGS84_GPS, always_xy=True)
+    # _TRANSFORMER_2_WGS = Transformer.from_crs(EPSG_32633_BALATON, WGS84_GPS, always_xy=True)
 
     def __init__(self, latitude: float, longitude: float, cs_from=WGS84_GPS, crs_to=EPSG_32634_BP):
 
