@@ -31,24 +31,32 @@ class ShipPosition(GPSPoint):
     _singleton_lock = Lock()
     _lock = Lock()
 
-    def __new__(cls, latitude=0.0, longitude=0.0, geofence=None):
+    def __new__(cls, geofence=None):
         with cls._singleton_lock:
             if cls._instance is None:
                 cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, latitude=0.0, longitude=0.0, geofence: CircularGeofence | PolygonalGeofence = None):
+    def __init__(self, geofence: CircularGeofence | PolygonalGeofence = None):
 
         # Ha nem létezik a '__initialized' attributum, hamisnak vesszük;
         if not getattr(self, '__initialized', False):
+
+            self._gps = GPSManager()
+
+            latitude, longitude = self._gps.get_live_location()
+
+            if latitude is None or longitude is None:
+                msg = f"ShipPosition couldn't get live GPS and didn't recieve valid initial lat-lon!"
+                logger.error(msg)
+                raise ValueError(msg)
+
             super().__init__(latitude, longitude)
 
             # '"__initialized" is not accessed - Pylance' ->
             # A 'getattr' igenis eléri, csak ezt a linter nem tudja szegény
             self.__initialized = True
             self.geofence = geofence
-
-            self._gps = GPSManager()
             self._running = False
             self._thread: threading.Thread = None
 
