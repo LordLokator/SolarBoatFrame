@@ -77,6 +77,10 @@ class ShipState:
         R = self.rotation_matrix()
         nu = self.nu()
         return R @ nu
+    
+    def nu_dot(self) -> np.ndarray:
+        #TODO: implement this function
+        return np.array([0, 0, 0])
 
     def rotation_matrix(self) -> np.ndarray:
         """Return the rotation matrix R(psi) from body to Earth frame (Equation 3)."""
@@ -117,7 +121,7 @@ class ShipState:
             next_segment.Yn - current_segment.Yn,
             next_segment.Xn - current_segment.Xn
         )
-        
+    
     def L_k(self, index_of_current_segment: float) -> float:
         """return the distance before a waypoint at which a turning maneuver should start (equation 5)."""
         psi_k_radian = self.psi_k(index_of_current_segment)
@@ -150,6 +154,55 @@ class ShipState:
             np.ndarray: Control vector [δ_c, n_gc].
         """
         return np.array([delta_c, ngc])
-
-        # TODO
-        ...
+    
+    def matrix_M(self) -> np.ndarray:
+        """return the inertia matrix M (Equation 8)."""
+        #TODO: fill in the values
+        m11 = none
+        m22 = none
+        m23 = none
+        m32 = none
+        m33 = none
+        
+        return np.array([
+            [m11, 0, 0],
+            [0, m22, m23],
+            [0, m32, m33]
+        ])
+    
+    def matrix_C(self) -> np.ndarray:
+        """return the Coriolis and centripetal matrix C (Equation 9)."""
+        #TODO: fill in the values
+        c13 = none
+        c23 = none
+        c31 = none
+        c32 = none
+        
+        return np.array([
+            [0, 0, c13],
+            [0, 0, c23],
+            [c31, c32, 0]
+        ])
+        
+    def matrix_D(self) -> np.ndarray:
+        """return the damping matrix D (Equation 10)."""
+        d11 = none
+        d22 = none
+        d23 = none
+        d32 = none
+        d33 = none
+        #TODO: fill in the values
+        return np.array([
+            [-d11, 0, 0],
+            [0, -d22, -d23],
+            [0, -d32, -d33]
+        ])
+        
+    def force_vector(self) -> np.ndarray:
+        return self.matrix_M() @ self.nu_dot() + self.matrix_C() @ self.nu() + self.matrix_D() @ self.nu()
+        
+        
+        
+        
+    # TODO
+    ...
