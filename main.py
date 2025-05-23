@@ -24,27 +24,36 @@ def main():
 
     # TODO: while any task is ongoing instead of True
     # TODO: safeguards?...
-    while True:
-        ship_manager.step()
 
-        # Minden, ami a következő GPS koordináta megszülését jelenti,
-        # a ship_manager-ben történik!
-        next_objective = ship_manager.get_next_objective_coo()
+    try:
+        while True:
+            ship_manager.step()
 
-        # TODO: Kitaláljuk, mit mondjunk az aktuárotorknak
-        ...
+            # Minden, ami a következő GPS koordináta megszülését jelenti,
+            # a ship_manager-ben történik!
+            next_objective = ship_manager.get_next_objective_coo()
 
-        # TODO: a CAN üzeneteit majd valahogy be kell vezetni a manager-be!
-        # e.g rudder state
+            # TODO: Kitaláljuk, mit mondjunk az aktuárotorknak
+            ...
 
-        # TODO: Közvetítünk a CAN felé.
-        can_manager.send_message(
-            # tell engine to do stuff...
-        )
+            # TODO: a CAN üzeneteit majd valahogy be kell vezetni a manager-be!
+            # e.g rudder state
 
-        can_manager.send_message(
-            # tell rudder to do stuff...
-        )
+            # TODO: Közvetítünk a CAN felé.
+            # can_manager.send_message(
+            #     # tell engine to do stuff...
+            # )
 
-        # Valamilyen FPS-el futtatjuk ezeket a függvényeket:
-        time.sleep(waittime)
+            # can_manager.send_message(
+            #     # tell rudder to do stuff...
+            # )
+
+            # Valamilyen FPS-el futtatjuk ezeket a függvényeket:
+            time.sleep(waittime)
+
+    except KeyboardInterrupt:
+        logger.info("KeyboardInterrupt detected, shutting down...")
+
+
+if __name__ == "__main__":
+    main()
