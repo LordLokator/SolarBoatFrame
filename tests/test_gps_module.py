@@ -1,6 +1,7 @@
 # tests/test_gps_module.py
 
 import os
+import time
 import unittest
 from copy import deepcopy as copy
 import threading
@@ -43,64 +44,87 @@ BMEK_Y_32634 = 5260503.589850288
 
 class TestGPSPoint(unittest.TestCase):
     def test_get_coordinates(self):
-        test_lat = 3.0
-        test_lon = 4.0
+        test_lat = BMEK_LAT
+        test_lon = BMEK_LON
         p = GPSPoint(test_lat, test_lon)
 
         self.assertEqual(p.get_coordinates(), (test_lat, test_lon))
 
     def test_get_set_coordinates(self):
-        test_lat = 3.0
-        test_lon = 4.0
+        test_lat = BMEK_LAT
+        test_lon = BMEK_LON
         secondary = GPSPoint(test_lat, test_lon)
 
-        reference = GPSPoint(1.0, 2.0)
+        reference = GPSPoint(BMEK_LAT, BMEK_LON)
         reference.set_coordinates(secondary)
 
         self.assertEqual(reference.get_coordinates(), (test_lat, test_lon))
 
     def test_haversine_distance(self):
-        p1 = GPSPoint(0, 0)
-        p2 = GPSPoint(0, 1)
-        self.assertTrue(110000 < p1.haversine_distance(p2) < 112000)
+        p1 = GPSPoint(BMEK_LAT, BMEK_LON)
+        p2 = GPSPoint(SZANTOD_LAT, SZANTOD_LON)
+
+        _dist = p1.haversine_distance(p2)
+        logger.warning(f"Haversine calculated is [{_dist}]")
+
+        # Distance should be exactly 110_030 meters. Checking for +-50m:
+        self.assertTrue(109_980 < _dist < 110_080)
+
+        # Distance should be exactly 110_030 meters. Checking for +-5m:
+        self.assertTrue(110_025 < _dist < 110_035)
 
 
 class TestShipPosition(unittest.TestCase):
     def test_singleton_property(self):
-        p1 = ShipPosition(1.0, 2.0)
-        p2 = ShipPosition(3.0, 4.0)
+        _fence = CircularGeofence(
+            GPSPoint(BMEK_LAT, BMEK_LON),
+            1_000_000  # m
+        )
+        p1 = ShipPosition(_fence)
+        p2 = ShipPosition(_fence)
+
+        time.sleep(1)
+
         self.assertIs(p1, p2)  # if truly singleton -> this holds
 
     def test_thread_safety_update(self):
-        init_lat = copy(TIHANY_LAT)
-        init_lon = copy(TIHANY_LON)
 
-        fence = CircularGeofence(GPSPoint(init_lat, init_lon), 5000)  # 5km
+        ship = ShipPosition(
+            geofence=CircularGeofence(
+                GPSPoint(BMEK_LAT, BMEK_LON),
+                1_000_000  # 1000km
+            )
+        )
 
-        ship = ShipPosition(init_lat, init_lon, fence)
+        time.sleep(.5)
 
         def thread_job():
-            for _ in range(5):
-                success = ship.update_position(ObjectiveCoordinate(
-                    copy(SZANTOD_LAT),
-                    copy(SZANTOD_LON)
-                ))
-                assert success, "Geofence stopped you from having a good day!"
+            for i in range(10):
+                lat, lon = (SZANTOD_LAT, SZANTOD_LON) if i % 2 == 0 else (TIHANY_LAT, TIHANY_LON)
+                pos = ObjectiveCoordinate(lat, lon)
+                success = ship.update_position(pos)
+                assert success, f"GeofenceR: {ship.geofence.radius} | H_dist: {ship.geofence.center.haversine_distance(pos)}"
 
-        threads = [threading.Thread(target=thread_job) for _ in range(10)]
+        threads = [threading.Thread(target=thread_job) for _ in range(100)]
         for t in threads:
             t.start()
         for t in threads:
             t.join()
 
         lat, lon = ship.get_coordinates()
-        self.assertIn((lat, lon), [(copy(SZANTOD_LAT), copy(SZANTOD_LON))])
+        self.assertIn(
+            (lat, lon),
+            [
+                (SZANTOD_LAT, SZANTOD_LON),
+                (TIHANY_LAT, TIHANY_LON)
+            ] # Because we *did* change it. We don't know which change was last.
+        )
 
     def test_project_earthbased(self):
-        point = GPSPoint(SZANTOD_LAT, SZANTOD_LON)
+        point = GPSPoint(BMEK_LAT, BMEK_LON)
 
-        self.assertAlmostEqual(point.Xn, SZANTOD_X_32633, places=1)
-        self.assertAlmostEqual(point.Yn, SZANTOD_Y_32633, places=1)
+        self.assertAlmostEqual(point.Xn, BMEK_X_32634, places=1)
+        self.assertAlmostEqual(point.Yn, BMEK_Y_32634, places=1)
 
 
 class TestBuoyPosition(unittest.TestCase):
