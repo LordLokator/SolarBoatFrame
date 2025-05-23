@@ -3,7 +3,11 @@
 from math import sin, cos
 import os
 from threading import Lock
+import threading
+import time
 from loguru import logger
+
+from managers import GPSManager
 
 from .geofence import CircularGeofence, PolygonalGeofence
 from .objective import ObjectiveCoordinate
@@ -18,6 +22,8 @@ logger.add(
     backtrace=True,
     diagnose=True
 )
+
+UPDATE_INTERVAL = 0.1  # 1/10 second
 
 
 class ShipPosition(GPSPoint):
@@ -42,9 +48,36 @@ class ShipPosition(GPSPoint):
             self.__initialized = True
             self.geofence = geofence
 
+            self._gps = GPSManager()
+            self._running = False
+            self._thread: threading.Thread = None
+
     # region properties
 
     # endregion
+
+    def _update_loop(self):
+        while self._running:
+            lat, lon = self._gps.get_location()
+            if lat is not None and lon is not None:
+                with self._lock:
+                    self.latitude = lat
+                    self.longitude = lon
+                    logger.debug("ShipPosition updated: lat={}, lon={}", lat, lon)
+            time.sleep(UPDATE_INTERVAL)
+
+    def start_auto_update(self):
+        if not self._running:
+            self._running = True
+            self._thread = threading.Thread(target=self._update_loop, daemon=True)
+            self._thread.start()
+            logger.info("Auto-update thread started.")
+
+    def stop_auto_update(self):
+        if self._running:
+            self._running = False
+            self._thread.join()
+            logger.info("Auto-update thread stopped.")
 
     def _get_body_referenced_coordinates(self, reference: GPSPoint, heading_psi: float) -> tuple[float, float]:
         """Returns a body-referenced coordinate pair of (Xb, Yb).
