@@ -33,7 +33,7 @@ class ShipState:
     # region Properties
     @property
     def Xn(self):
-        Xn = self.current_position.Xn
+        Xn = self.position.Xn
         if Xn is None or not isinstance(Xn, float):
             err_msg = f"Xn is supposed to be of type float, it is instead [{type(Xn)}] with value [{Xn}]!"
             logger.critical(err_msg)
@@ -43,7 +43,7 @@ class ShipState:
 
     @property
     def Yn(self):
-        Yn = self.current_position.Yn
+        Yn = self.position.Yn
         if Yn is None or not isinstance(Yn, float):
             err_msg = f"Yn is supposed to be of type float, it is instead [{type(Yn)}] with value [{Yn}]!"
             logger.critical(err_msg)
@@ -68,7 +68,7 @@ class ShipState:
     @property
     def nu(self) -> np.ndarray:
         """Return position and heading vector in body-fixed frame."""
-        self.current_position.ned_offset_from(self.origin_position)
+        self.position.ned_offset_from(self.origin_position)
         return np.array([self.u, self.v, self.r])
 
     # endregion
@@ -92,11 +92,11 @@ class ShipState:
         ])
 
     def get_body_referenced_coordinates(self, reference) -> tuple[float, float]:
-        Xb, Yb = self.current_position._get_body_referenced_coordinates(
+        Xb, Yb = self.position._get_body_referenced_coordinates(
             reference=reference,
             heading_psi=self.psi
         )
         return (Xb, Yb)
 
-        # TODO
-        ...
+    # TODO
+    ...
