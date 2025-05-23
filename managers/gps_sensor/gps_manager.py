@@ -1,4 +1,5 @@
 import os
+import time
 from serial import Serial
 from pyubx2 import UBXReader, NMEA_PROTOCOL, UBX_PROTOCOL
 from loguru import logger
@@ -35,17 +36,34 @@ class GPSManager:
         except Exception as e:
             logger.exception("Failed to initialize GPSManager: {}", e)
 
-    def get_location(self):
-        try:
-            raw_data, parsed_data = self.ubr.read()
-            if parsed_data is not None and hasattr(parsed_data, 'lat') and hasattr(parsed_data, 'lon'):
-                logger.debug("Location received: lat={}, lon={}", parsed_data.lat, parsed_data.lon)
-                return parsed_data.lat, parsed_data.lon
-            logger.debug("Parsed data does not contain lat/lon.")
+    def get_live_location(self, timeout: float = 2.0, interval: float = 0.2) -> tuple[float, float]:
+        """Asynchronously attempt to get a valid GPS reading for up to ~2 seconds. Order: lat - lon.
 
-        except Exception as e:
-            logger.exception("Error while reading location: {}", e)
+        Args:
+            timeout (float): Max seconds to wait for a valid reading.
+            interval (float): Time between polls.
 
+        Returns:
+            tuple[float, float]: Latitude - Longitude
+        """
+
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            try:
+                raw_data, parsed_data = self.ubr.read()
+                if parsed_data is not None and hasattr(parsed_data, 'lat') and hasattr(parsed_data, 'lon'):
+                    logger.debug("Location received: lat={}, lon={}", parsed_data.lat, parsed_data.lon)
+                    return parsed_data.lat, parsed_data.lon
+
+                logger.debug("Waiting for GPS fix...")
+
+            except Exception as e:
+                logger.exception("Error while reading location: {}", e)
+
+            time.sleep(interval)
+
+        logger.warning("GPS fix not acquired within timeout.")
         return None, None
 
     def close(self):

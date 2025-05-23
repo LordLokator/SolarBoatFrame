@@ -36,7 +36,7 @@ class TestGPSManager(unittest.TestCase):
         mock_ubxreader_cls.return_value = mock_reader
 
         gps = GPSManager()
-        lat, lon = gps.get_location()
+        lat, lon = gps.get_live_location()
         self.assertEqual(lat, 50.0)
         self.assertEqual(lon, 8.0)
         gps.close()
@@ -49,7 +49,7 @@ class TestGPSManager(unittest.TestCase):
         mock_ubxreader_cls.return_value = mock_reader
 
         gps = GPSManager()
-        lat, lon = gps.get_location()
+        lat, lon = gps.get_live_location()
         self.assertIsNone(lat)
         self.assertIsNone(lon)
         gps.close()

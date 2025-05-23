@@ -58,7 +58,7 @@ class ShipPosition(GPSPoint):
 
     def _update_loop(self):
         while self._running:
-            lat, lon = self._gps.get_location()
+            lat, lon = self._gps.get_live_location()
             if lat is not None and lon is not None:
                 with self._lock:
                     self.latitude = lat
