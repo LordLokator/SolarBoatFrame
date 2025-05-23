@@ -22,7 +22,6 @@ class ShipState:
         self.origin_position: ShipPosition = starting_position
         self.current_position: ShipPosition = starting_position
         self.route: list[ObjectiveCoordinate] = []  # init?
-        self.current_segment: ObjectiveCoordinate = None # init? -> the first segment in the route list?
         self.properties = BlueLadyShipProperties()
 
         self.psi: float = 0.0  # heading in radians (w.r.t North)
@@ -98,21 +97,36 @@ class ShipState:
         )
         return (Xb, Yb)
 
-    def psi_k(self) -> float:
-        """Calculate the heading angle IN RADIANS of the current and the next segment."""
+    def psi_k(self, index_of_current_segment: float) -> float:
+        """return the segment heading angle IN RADIANS of the current and the next segment (equation 4)."""
         if self.route is None or len(self.route) < 2:
             err_msg = "Route is not set or has less than 2 points!"
             logger.critical(err_msg)
             raise ValueError(err_msg)
-        if self.current_segment is None:
-            err_msg = "Current segment is not set!"
+        if index_of_current_segment is None or index_of_current_segment < 0 or index_of_current_segment >= len(self.route):
+            err_msg = "Current segment is not given or out of bounds!"
             logger.critical(err_msg)
             raise ValueError(err_msg)
-        if self.route.index(self.current_segment) == len(self.route) - 1:
+        if  index_of_current_segment == len(self.route) - 1:
             err_msg = "Current segment is the last one in the route, cannot calculate heading of next segment!"
             logger.critical(err_msg)
-            raise ValueError(err_msg)
-        next_segment = self.route[self.route.index(self.current_segment) + 1]
+            raise IndexError(err_msg)
+        current_segment = self.route[index_of_current_segment]
+        next_segment = self.route[index_of_current_segment + 1]
+        return np.atan2(
+            next_segment.Yn - current_segment.Yn,
+            next_segment.Xn - current_segment.Xn
+        )
+        
+    def L_k(self, index_of_current_segment: float) -> float:
+        """return the distance before a waypoint at which a turning maneuver should start (equation 5)."""
+        a6 = 5.987527e-09
+        a5 = -1.561371e-06
+        a4 = 1.430259e-04
+        a3 = -0.004935727
+        a2 = 0.01235089
+        a1 = 2.10745127
+        a0 = -0.02348713
 
 
         # TODO
