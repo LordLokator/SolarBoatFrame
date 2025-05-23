@@ -31,10 +31,14 @@ class GPSPoint:
     # _CRS_PROJECTED = CRS.from_epsg(EPSG_32633_BALATON)
     # _TRANSFORMER = Transformer.from_crs(_CRS_GEODETIC, _CRS_PROJECTED, always_xy=True)
 
-    _TRANSFORMER = Transformer.from_crs(WGS84_GPS, EPSG_32633_BALATON, always_xy=True)
+    _TRANSFORMER: Transformer = None
+    # _TRANSFORMER = Transformer.from_crs(WGS84_GPS, EPSG_32633_BALATON, always_xy=True)
     # transformer_to_wgs = Transformer.from_crs(EPSG_32633_BALATON, WGS84_GPS, always_xy=True)
 
-    def __init__(self, latitude: float, longitude: float):
+    def __init__(self, latitude: float, longitude: float, cs_from=WGS84_GPS, crs_to=EPSG_32634_BP):
+
+        self._TRANSFORMER = Transformer.from_crs(cs_from, crs_to, always_xy=True)
+
         self._lock = Lock()
         self.latitude = latitude
         self.longitude = longitude
