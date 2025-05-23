@@ -35,9 +35,14 @@ class ShipPosition(GPSPoint):
         with cls._singleton_lock:
             if cls._instance is None:
                 cls._instance = super().__new__(cls)
+                cls._instance._initialized = False
         return cls._instance
 
     def __init__(self, geofence: CircularGeofence | PolygonalGeofence = None):
+        if self._initialized:
+            return
+
+        self._initialized = True
 
         # Ha nem létezik a '__initialized' attributum, hamisnak vesszük;
         if not getattr(self, '__initialized', False):
