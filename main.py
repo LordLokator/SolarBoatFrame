@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 from loguru import logger
 
-from can_bus.can_manager import CANManager
+from managers import CANManager
 from ship_manager import ShipManager
 
 
