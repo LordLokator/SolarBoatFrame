@@ -39,8 +39,8 @@ class GPSPoint:
         self.latitude = latitude
         self.longitude = longitude
 
-        if not str(EPSG_32634_BP).endswith(str(self._utm_zone())):
-            logger.warning(f"UTM Zone mismatch! Calculated: [{self._utm_zone()}] | Used: [{EPSG_32634_BP}]")
+        # if not str(EPSG_32634_BP).endswith(str(self._utm_zone())):
+        #     logger.warning(f"UTM Zone mismatch! Calculated: [{self._utm_zone()}] | Used: [{EPSG_32634_BP}]")
 
         msg = f"Initialized GPSPoint: ({self.latitude}, {self.longitude})"
         logger.debug(msg)
