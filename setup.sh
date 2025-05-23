@@ -4,7 +4,8 @@
 set -e
 
 # Log file
-LOGFILE="setup_env.log"
+mkdir -p ./logging
+LOGFILE="./logging/setup_env.log"
 
 # Create virtual environment
 echo "Creating virtual environment '.venv'..." | tee -a $LOGFILE
