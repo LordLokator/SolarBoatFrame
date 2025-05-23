@@ -37,7 +37,7 @@ class CANManager:
 
         self.bus = can.interface.Bus(
             channel=self.channel,
-            bustype=self.bustype,
+            # bustype=self.bustype, # NOTE: Deprecated and causes error!
             bitrate=self.bitrate,
             interface=self.interface
         )
