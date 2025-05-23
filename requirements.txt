@@ -7,3 +7,5 @@ pyproj  # Python interface to PROJ (cartographic projections and coordinate tran
 loguru # Logger
 
 ipykernel # for Jupyter Notebooks
+
+pyubx2 # For reading GPS from UBX compatible devices
