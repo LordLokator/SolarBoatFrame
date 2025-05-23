@@ -8,4 +8,8 @@ loguru # Logger
 
 ipykernel # for Jupyter Notebooks
 
+python-can # for CAN-Bus.
+# NOTE: Might need python-can[serial] @ https://python-can.readthedocs.io/en/stable/installation.html
+
 pyubx2 # For reading GPS from UBX compatible devices
+pyserial # Accessing serial ports
