@@ -73,3 +73,9 @@ class GPSManager:
         if self.stream:
             self.stream.close()
             logger.debug("Serial stream closed.")
+
+
+if __name__ == "__main__":
+    manager = GPSManager()
+
+    manager.get_live_location(timeout=10)
