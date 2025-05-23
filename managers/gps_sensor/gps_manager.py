@@ -27,6 +27,9 @@ class GPSManager:
         self.ubr = None
         self._initialize()
 
+        # WARMUP! NEEDED FOR MORE CONSISTENT STARTUP!
+        _, _ = self.get_live_location(timeout=5)
+
     def _initialize(self):
         try:
             self.stream = Serial(self.port, self.baudrate, timeout=self.timeout)
