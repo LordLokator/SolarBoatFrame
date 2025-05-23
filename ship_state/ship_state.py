@@ -138,6 +138,18 @@ class ShipState:
         # TODO: check the coefficients AND the units : degree or radian?
         return a6 * delta_psi**6 + a5 * delta_psi**5 + a4 * delta_psi**4 + a3 * delta_psi**3 + a2 * delta_psi**2 + a1 * delta_psi + a0
 
+    def S_c(delta_c: float, ngc: float) -> np.ndarray:
+        """
+        Compute the control signal vector S_c(t) = [δ_c(t), n_gc(t)]ᵀ (Equation 6).
+
+        Args:
+            delta_c (float): Commanded rudder angle (in radians).
+            ngc (float): Commanded propeller shaft speed (in RPM).
+
+        Returns:
+            np.ndarray: Control vector [δ_c, n_gc].
+        """
+        return np.array([delta_c, ngc])
 
         # TODO
         ...
