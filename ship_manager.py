@@ -1,5 +1,5 @@
 from gps_coordinate.objective import ObjectiveCoordinate
-from ship_state.ship_properties import ShipProperties
+from ship_state.ship_properties import BlueLadyShipProperties
 from ship_state.ship_state import ShipState
 
 
@@ -13,7 +13,7 @@ class ShipManager:
         return cls._instance
 
     def __init__(self):
-        self.ship_properties = ShipProperties()
+        self.ship_properties = BlueLadyShipProperties()
         self.ship_state = ShipState()
 
         # TODO

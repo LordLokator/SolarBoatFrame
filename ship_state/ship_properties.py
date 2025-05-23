@@ -18,26 +18,6 @@ logger.add(
 
 
 @dataclass(frozen=True)
-class ShipProperties:
-    length:         float = 0.0  # LOA
-    breadth:        float = 0.0  # B
-    draft:          float = 0.0  # Td
-    displacement:   float = 0.0  # Delta
-    x_g:            float = 0.0  # center of gravity x position (usually 0)
-
-    def __post_init__(self):
-        logger.warning("This is an Empty config for testing purposes!")
-        logger.debug(dedent(
-            f"""{type(self).__name__} object, params: \
-                    | length: {self.length} \
-                    | breadth: {self.breadth} \
-                    | draft: {self.draft} \
-                    | displacement: {self.displacement} \
-                    | x_g: {self.x_g}"""
-        ))
-
-
-@dataclass(frozen=True)
 class BlueLadyShipProperties:
 
     length:         float = 13.78   # LOA
