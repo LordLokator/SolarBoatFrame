@@ -101,7 +101,7 @@ class TestShipPosition(unittest.TestCase):
         def thread_job():
             for i in range(10):
                 lat, lon = (SZANTOD_LAT, SZANTOD_LON) if i % 2 == 0 else (TIHANY_LAT, TIHANY_LON)
-                pos = ObjectiveCoordinate(lat, lon)
+                pos = GPSPoint(lat, lon)
                 success = ship.update_position(pos)
                 assert success, f"GeofenceR: {ship.geofence.radius} | H_dist: {ship.geofence.center.haversine_distance(pos)}"
 
