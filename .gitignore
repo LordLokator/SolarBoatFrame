@@ -1,5 +1,6 @@
 # Project-specific
 sandbox.ipynb
+net_config.ini
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
