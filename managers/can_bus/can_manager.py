@@ -11,6 +11,16 @@ logger.add(
     diagnose=True
 )
 
+# Kormány:
+# init: kormány potméter állapot olvasás -> convert(x°) -> enum[], steppek (int vagy double)
+# output már konvertákva menjen ki a CAN-re.
+
+# Gázkar:
+# kb ugyanaz, itt is diszkrétet választunk ki, konvertálunk, elküldjük CAN-en
+
+# Start bit, UART: 0-255 gázkar (oszd el 2-vel)
+# RUDDER-t, azaz irányt adunk meg, nem a hajó állását
+
 
 class CANManager:
 

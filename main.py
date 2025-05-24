@@ -25,6 +25,8 @@ def main():
     # TODO: while any task is ongoing instead of True
     # TODO: safeguards?...
 
+    # TODO: 1/10 - 1/20 küldjük ki az aktuális állást
+
     try:
         while True:
             ship_manager.step()
