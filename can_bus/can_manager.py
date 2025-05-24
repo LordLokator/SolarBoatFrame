@@ -1,6 +1,8 @@
 import can
 from loguru import logger
 import os
+import threading
+import time
 
 LOG_PATH = os.path.abspath(os.path.join("logging", "CAN_logs.log"))
 
@@ -32,16 +34,27 @@ class CANManager:
             interface (str, optional): Defaults to 'virtual'.
         """
         self.channel = channel
-        self.bustype = bustype
         self.bitrate = bitrate
         self.interface = interface
 
         self.bus = can.interface.Bus(
-            channel=self.channel,
-            bustype=self.bustype,
             bitrate=self.bitrate,
             interface=self.interface
         )
+    
+    def listen_loop(self):
+        """
+        Continuously listens to the CAN bus in a separate thread.
+        """
+        logger.info(f"Listening started in thread: {threading.current_thread().name}")
+        while True:
+            try:
+                message = self.receive_message(timeout=1.0)
+                if message:
+                    logger.info(f"Message received: {message}")
+            except Exception as e:
+                logger.error(f"Error in listen_loop: {e}")
+            time.sleep(0.1)
 
     def send_message(self, arbitration_id: int, data: bytes):
         """
@@ -57,9 +70,9 @@ class CANManager:
         )
         try:
             self.bus.send(message)
-            print(f"Message sent: {message}")
+            logger.success(f"Message sent: {message}")
         except can.CanError as e:
-            print(f"Failed to send message: {e}")
+            logger.error(f"Failed to send message: {e}")
 
     def receive_message(self, timeout: float = 1.0):
         """
@@ -70,9 +83,9 @@ class CANManager:
 
         message = self.bus.recv(timeout=timeout)
         if message:
-            print(f"Message received: {message}")
+            logger.debug(f"Received message: {message}")
         else:
-            print("No message received within the timeout.")
+            logger.warning("No message received within the timeout.")
         return message
 
     def shutdown(self):
@@ -81,16 +94,34 @@ class CANManager:
         """
         if self.bus:
             self.bus.shutdown()
-            print("CAN bus shut down.")
+            logger.info("CAN bus shut down.")
 
 
 if __name__ == "__main__":
     can_manager = CANManager(
         channel="vcan0",
-        bustype="socketcan",
         bitrate=500000
     )
-    PAYLOAD: list[int] = [k for k in range(5)]
-    can_manager.send_message(arbitration_id=0x123, data=PAYLOAD)
-    can_manager.receive_message(timeout=2.0)
-    can_manager
+
+    try:
+        PAYLOAD: list[int] = [k for k in range(5)]
+        can_manager.send_message(arbitration_id=0x123, data=bytes(PAYLOAD))
+    except can.exceptions.CanOperationError as e:
+        logger.error(f"CAN operation failed: {e}")
+
+    try:
+        can_manager.receive_message()
+    except can.exceptions.CanOperationError as e:
+        logger.error(f"CAN operation failed: {e}")
+
+    listener_thread = threading.Thread(
+        target=can_manager.listen_loop,
+        name="CANListenerThread",
+        daemon=True
+    )
+    listener_thread.start()
+
+
+    time.sleep(10)
+
+    can_manager.shutdown()
