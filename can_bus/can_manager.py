@@ -20,7 +20,6 @@ class CANManager:
     def __init__(
         self,
         channel: str = "default_channel",
-        bustype: str = "socketcan",
         bitrate: int = 500000,
         interface: str = 'virtual',
     ):
@@ -38,6 +37,7 @@ class CANManager:
         self.interface = interface
 
         self.bus = can.interface.Bus(
+            channel=self.channel,
             bitrate=self.bitrate,
             interface=self.interface
         )
