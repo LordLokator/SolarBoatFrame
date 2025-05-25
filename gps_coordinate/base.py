@@ -39,7 +39,7 @@ class GPSPoint:
             "EPSG_32633_BALATON": EPSG_32633_BALATON,
             "EPSG_32632_MONACO": EPSG_32632_MONACO,
             "WGS84_GPS": WGS84_GPS,
-        }).get(crs_to, default="Unknown CRS type.")
+        }).get(crs_to, "Unknown CRS type.")
 
         self._lock = Lock()
         self.latitude = latitude
