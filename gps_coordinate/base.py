@@ -34,6 +34,12 @@ class GPSPoint:
     def __init__(self, latitude: float, longitude: float, cs_from=WGS84_GPS, crs_to=EPSG_32634_BP):
 
         self._TRANSFORMER = Transformer.from_crs(cs_from, crs_to, always_xy=True)
+        self.transformer_target_name: str = ({
+            "EPSG_32634_BP": EPSG_32634_BP,
+            "EPSG_32633_BALATON": EPSG_32633_BALATON,
+            "EPSG_32632_MONACO": EPSG_32632_MONACO,
+            "WGS84_GPS": WGS84_GPS,
+        }).get(crs_to, default="Unknown CRS type.")
 
         self._lock = Lock()
         self.latitude = latitude
