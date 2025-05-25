@@ -1,4 +1,6 @@
 python-can # CAN bus module
+# NOTE: Might need python-can[serial] @ https://python-can.readthedocs.io/en/stable/installation.html
+
 python-dotenv # For reading the .env config
 
 shapely # For checking if a polygon contains a point @ GPS
@@ -7,9 +9,6 @@ pyproj  # Python interface to PROJ (cartographic projections and coordinate tran
 loguru # Logger
 
 ipykernel # for Jupyter Notebooks
-
-python-can # for CAN-Bus.
-# NOTE: Might need python-can[serial] @ https://python-can.readthedocs.io/en/stable/installation.html
 
 pyubx2 # For reading GPS from UBX compatible devices
 pyserial # Accessing serial ports
