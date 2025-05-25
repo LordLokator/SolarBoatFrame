@@ -31,7 +31,7 @@ class ShipPosition(GPSPoint):
     _singleton_lock = Lock()
     _lock = Lock()
 
-    def __new__(cls, geofence=None):
+    def __new__(cls, *args, **kwargs):
         with cls._singleton_lock:
             if cls._instance is None:
                 cls._instance = super().__new__(cls)

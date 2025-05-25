@@ -10,7 +10,7 @@ from ship_state.ship_state import ShipState
 class ShipManager:
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             if not cls._instance:
                 cls._instance = super().__new__(cls)
