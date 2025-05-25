@@ -74,7 +74,7 @@ class TestShipPosition(unittest.TestCase):
             for i in range(10):
                 lat, lon = (SZANTOD_LAT, SZANTOD_LON) if i % 2 == 0 else (TIHANY_LAT, TIHANY_LON)
                 pos = GPSPoint(lat, lon)
-                success = ship.update_position(pos)
+                success = ship.set_ship_position(pos)
                 assert success, f"GeofenceR: {ship.geofence.radius} | H_dist: {ship.geofence.center.haversine_distance(pos)}"
 
         threads = [threading.Thread(target=thread_job) for _ in range(100)]
