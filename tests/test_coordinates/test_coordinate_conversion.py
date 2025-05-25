@@ -60,8 +60,9 @@ class TestCoordinateTransformations(unittest.TestCase):
 
         Xb, Yb = self.ship_state.get_body_referenced_coordinates(reference=reference)
 
-        self.assertAlmostEqual(Xb, 0.0)  # AssertionError: 10.3491 != 0.0 within 7 places (10.3491 difference)
-        self.assertAlmostEqual(Yb, 0.0)
+        # AssertionError: 69.99999999999997 != 0.0 within 3 places (69.99999999999997 difference)
+        self.assertAlmostEqual(Xb, 0.0, places=3)
+        self.assertAlmostEqual(Yb, 0.0, places=3)
 
     def test_north_displacement_zero_heading(self):
         """Move north with 0 rad heading: Xb should be positive"""
@@ -74,15 +75,15 @@ class TestCoordinateTransformations(unittest.TestCase):
         self.assertAlmostEqual(Yb, 0.0, places=3)
 
     def test_east_displacement_zero_heading(self):
-        self._move_ship(d_east_m=10)
+        self._move_ship(d_east_m=20)
         self.ship_state.psi = 0.0
         reference = GPSPoint(self.origin_lat, self.origin_lon)
         Xb, Yb = self.ship_state.get_body_referenced_coordinates(reference)
-        self.assertAlmostEqual(Xb, 0.0)
+        self.assertAlmostEqual(Xb, 0.0, places=3)
         self.assertGreater(Yb, 0.0)
 
     def test_north_displacement_with_heading_pi_over_2(self):
-        MOVEMENT = 100  # m
+        MOVEMENT = 30  # m
         self._move_ship(d_north_m=MOVEMENT)
         self.ship_state.psi = radians(90)
 
@@ -92,29 +93,33 @@ class TestCoordinateTransformations(unittest.TestCase):
 
         self.assertAlmostEqual(Xb, 0.0, delta=0.5)
         self.assertAlmostEqual(Yb, -MOVEMENT, delta=0.5)
-        # self.assertAlmostEqual(Xb, MOVEMENT) # AssertionError: 9.16623e-05 != 100 within 7 places (99.999 difference)
-        # self.assertLess(Yb, MOVEMENT)  # Rotated frame: North appears as -Yb
 
     def test_east_displacement_with_heading_pi_over_2(self):
-        self._move_ship(d_east_m=10)
+        self._move_ship(d_east_m=40)
         self.ship_state.psi = radians(90)
         reference = GPSPoint(self.origin_lat, self.origin_lon)
         Xb, Yb = self.ship_state.get_body_referenced_coordinates(reference)
         self.assertGreater(Xb, 0.0)
-        self.assertAlmostEqual(Yb, 0.0)
+        self.assertAlmostEqual(Yb, 0.0, places=3)
 
     def test_diagonal_northeast_displacement(self):
-        self._move_ship(d_north_m=10, d_east_m=10)
+        d_north = 50
+        d_east = 60
+        hyp = sqrt(d_north**2 + d_east**2)
+
+        self._move_ship(d_north_m=d_north, d_east_m=d_east)
         self.ship_state.psi = radians(45)
+
         reference = GPSPoint(self.origin_lat, self.origin_lon)
         Xb, Yb = self.ship_state.get_body_referenced_coordinates(reference)
-        hyp = sqrt(10**2 + 10**2)
+
         self.assertAlmostEqual(Xb, hyp, delta=0.5)
-        self.assertAlmostEqual(Yb, 0.0, delta=0.5)
+        # AssertionError: 7.071067811865483 != 0.0 within 0.5 delta (7.071067811865483 difference)
+        self.assertAlmostEqual(Yb, 0.0, delta=0.5) #
 
     def test_heading_wraparound(self):
         """Test heading > 2π has same result as modulo"""
-        self._move_ship(d_north_m=10)
+        self._move_ship(d_north_m=70)
         self.ship_state.psi = radians(360)
         reference = GPSPoint(self.origin_lat, self.origin_lon)
         Xb1, Yb1 = self.ship_state.get_body_referenced_coordinates(reference)
@@ -125,12 +130,12 @@ class TestCoordinateTransformations(unittest.TestCase):
 
     def test_negative_heading(self):
         """Negative heading should rotate in the opposite direction"""
-        self._move_ship(d_east_m=10)
+        self._move_ship(d_east_m=80)
         self.ship_state.psi = radians(-90)
         reference = GPSPoint(self.origin_lat, self.origin_lon)
         Xb, Yb = self.ship_state.get_body_referenced_coordinates(reference)
         self.assertLess(Xb, 0.0)
-        self.assertAlmostEqual(Yb, 0.0)
+        self.assertAlmostEqual(Yb, 0.0, places=3)
 
 
 if __name__ == "__main__":

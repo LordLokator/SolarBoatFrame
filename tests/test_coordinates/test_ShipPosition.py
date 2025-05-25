@@ -95,8 +95,8 @@ class TestShipPosition(unittest.TestCase):
     def test_project_earthbased(self):
         point = GPSPoint(BMEK_LAT, BMEK_LON)
 
-        self.assertAlmostEqual(point.Xn, BMEK_X_32634, places=1)
-        self.assertAlmostEqual(point.Yn, BMEK_Y_32634, places=1)
+        self.assertAlmostEqual(point.Xn, BMEK_X_32634, places=3)
+        self.assertAlmostEqual(point.Yn, BMEK_Y_32634, places=3)
 
 
 if __name__ == '__main__':
