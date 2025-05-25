@@ -38,7 +38,7 @@ class ShipPosition(GPSPoint):
                 cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self, geofence: CircularGeofence | PolygonalGeofence = None):
+    def __init__(self, geofence: CircularGeofence | PolygonalGeofence = None, gps_manager: GPSManager = None):
         if self._initialized:
             return
 
@@ -47,7 +47,7 @@ class ShipPosition(GPSPoint):
         # Ha nem létezik a '__initialized' attributum, hamisnak vesszük;
         if not getattr(self, '__initialized', False):
 
-            self._gps = GPSManager()
+            self._gps = self._gps = gps_manager if gps_manager else GPSManager()
 
             latitude, longitude = self._gps.get_live_location()
 
