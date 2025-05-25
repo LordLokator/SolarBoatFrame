@@ -6,7 +6,7 @@ import time
 from loguru import logger
 
 from managers import CANManager
-from ship_manager import ShipManager
+from managers.ship_task_manager import ShipTaskManager
 
 
 def main():
@@ -14,7 +14,7 @@ def main():
 
     waittime = 0.2
 
-    ship_manager = ShipManager()
+    ship_manager = ShipTaskManager()
     can_manager = CANManager(
         # channel=...,
         # bitrate=...,

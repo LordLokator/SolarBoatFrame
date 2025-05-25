@@ -7,7 +7,7 @@ from ship_state.ship_properties import BlueLadyShipProperties
 from ship_state.ship_state import ShipState
 
 
-class ShipManager:
+class ShipTaskManager:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
