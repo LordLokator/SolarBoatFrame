@@ -69,6 +69,11 @@ class ShipPosition(GPSPoint):
 
     # endregion
 
+    def update_positin_with_gps_data(self):
+        lat, lon = self._gps.get_live_location()
+        if lat is not None and lon is not None:
+            self.set_ship_position(GPSPoint(lat, lon))
+
     def _update_loop(self):
         while self._running:
             lat, lon = self._gps.get_live_location()
@@ -117,14 +122,21 @@ class ShipPosition(GPSPoint):
             reference_point = self
         return self.ned_offset_from(reference_point)
 
-    def update_position(self, new_objective: ObjectiveCoordinate) -> bool:
+    def set_ship_position(self, position: GPSPoint) -> bool:
+        """Sets the ship's position to the given coordinates if they are within the geofence.
 
-        if not self.geofence.contains(new_objective):
+        Args:
+            position (GPSPoint): Target coordinates.
+
+        Returns:
+            bool: Success.
+        """
+        if not self.geofence.contains(position):
             logger.warning("Attempted to move outside geofence!")
             return False
 
         else:
-            self.set_coordinates(new_objective)
+            self.set_coordinates(position)
             return True
 
     def is_within_geofence(self) -> bool:
