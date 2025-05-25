@@ -4,12 +4,9 @@ import unittest
 from ship_state.ship_properties import BlueLadyShipProperties
 from dataclasses import FrozenInstanceError
 
-# Szántódi rév
-SZANTOD_LAT = 46.87993481783788
-SZANTOD_LON = 17.89972984313507
-
 
 class TestGPSPoint(unittest.TestCase):
+
     def test_constructor(self):
         props = BlueLadyShipProperties(
             breadth=...,
@@ -19,7 +16,7 @@ class TestGPSPoint(unittest.TestCase):
             x_g=...,
         )
 
-        self.assertTrue(True)
+        self.assertTrue(props)
 
     def test_frozen_attributes(self):
         # Test ship properties' immutability
