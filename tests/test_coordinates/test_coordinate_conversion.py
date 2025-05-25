@@ -53,6 +53,10 @@ class TestCoordinateTransformations(unittest.TestCase):
 
     def test_initial_body_fixed_coordinates(self):
         """Xb, Yb at origin should be (0, 0) regardless of heading."""
+        self._move_ship(
+            d_east_m=0,
+            d_north_m=0
+        )
 
         reference = GPSPoint(self.origin_lat, self.origin_lon)  # Same coordinates
 
@@ -103,8 +107,10 @@ class TestCoordinateTransformations(unittest.TestCase):
         self.assertAlmostEqual(Yb, 0.0, places=3)
 
     def test_diagonal_northeast_displacement(self):
+        self.ship_position.update_positin_with_gps_data()
+
         d_north = 50
-        d_east = 60
+        d_east = 50
         hyp = sqrt(d_north**2 + d_east**2)
 
         self._move_ship(d_north_m=d_north, d_east_m=d_east)
@@ -114,8 +120,8 @@ class TestCoordinateTransformations(unittest.TestCase):
         Xb, Yb = self.ship_state.get_body_referenced_coordinates(reference)
 
         self.assertAlmostEqual(Xb, hyp, delta=0.5)
-        # AssertionError: 7.071067811865483 != 0.0 within 0.5 delta (7.071067811865483 difference)
-        self.assertAlmostEqual(Yb, 0.0, delta=0.5) #
+        self.assertAlmostEqual(Yb, 0.0, delta=0.5)
+        # 0.0 is the target because we turn 45° -> the 'right hand' coordinate is 0!
 
     def test_heading_wraparound(self):
         """Test heading > 2π has same result as modulo"""
