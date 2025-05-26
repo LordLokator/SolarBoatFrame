@@ -89,7 +89,7 @@ class TestShipPosition(unittest.TestCase):
             [
                 (SZANTOD_LAT, SZANTOD_LON),
                 (TIHANY_LAT, TIHANY_LON)
-            ] # Because we *did* change it. We don't know which change was last.
+            ]  # Because we *did* change it. We don't know which change was last.
         )
 
     def test_project_earthbased(self):
