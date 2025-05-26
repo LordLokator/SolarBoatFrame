@@ -47,36 +47,31 @@ class ShipPosition(GPSPoint):
 
         self._initialized = True
 
-        # Ha nem létezik a '__initialized' attributum, hamisnak vesszük;
-        if not getattr(self, '__initialized', False):
 
-            self._gps = self._gps = gps_manager if gps_manager else GPSManager()
+        self._gps = self._gps = gps_manager if gps_manager else GPSManager()
 
-            latitude, longitude = self._gps.get_live_location()
+        latitude, longitude = self._gps.get_live_location()
 
-            if latitude is None or longitude is None:
-                msg = f"ShipPosition couldn't get live GPS and didn't recieve valid initial lat-lon!"
-                logger.error(msg)
-                raise ValueError(msg)
+        if latitude is None or longitude is None:
+            msg = f"ShipPosition couldn't get live GPS and didn't recieve valid initial lat-lon!"
+            logger.error(msg)
+            raise ValueError(msg)
 
-            super().__init__(latitude, longitude)
+        super().__init__(latitude, longitude)
 
-            # '"__initialized" is not accessed - Pylance' ->
-            # A 'getattr' igenis eléri, csak ezt a linter nem tudja szegény
-            self.__initialized = True
-            self.geofence = geofence
-            self._running = False
-            self._thread: threading.Thread = None
+        self.geofence = geofence
+        self._running = False
+        self._thread: threading.Thread = None
 
-            self.reference_point: GPSPoint = GPSPoint(
-                self.latitude,
-                self.longitude
-            )
+        self.reference_point: GPSPoint = GPSPoint(
+            self.latitude,
+            self.longitude
+        )
 
-            self._heading_psi: float = 0.0  # heading in radians (w.r.t North)
-            self.u: float = 0.0  # surge speed
-            self.v: float = 0.0  # sway speed
-            self.r: float = 0.0  # yaw rate
+        self._heading_psi: float = 0.0  # heading in radians (w.r.t North)
+        self.u: float = 0.0  # surge speed
+        self.v: float = 0.0  # sway speed
+        self.r: float = 0.0  # yaw rate
 
     # region properties
 
