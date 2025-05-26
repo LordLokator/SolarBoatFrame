@@ -24,7 +24,14 @@ class ShipState:
     def __init__(self, starting_position: ShipPosition):
         self.position: ShipPosition = starting_position
         self.route: list[ObjectiveCoordinate] = []  # init?
+        self.current_segment_index = 0  # so we can keep the route list
+
         self.properties = BlueLadyShipProperties()  # change for Lana!
+
+        # CAN-fed dynamic state
+        # NOTE: Other CAN variables can be added here later
+        self.engine_rpm: float = 0.0
+        self.rudder_angle: float = 0.0
 
     # region Properties
 
