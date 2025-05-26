@@ -2,6 +2,8 @@
 
 This repository contains the **Autonomous Ship Control Framework**, a modular system designed to seamlessly connect and manage dedicated sensors, the CAN bus, actuators, communication modules (e.g., 4G), GPS, and a decision-making module. This framework acts as the backbone for orchestrating autonomous ship operations in real-world and simulated environments.
 
+We based our implementation on the work [[1]](#1) of Tomera M. and Alfuth Ł.
+
 
 ![image](https://github.com/user-attachments/assets/49beafc7-d98f-45ee-9129-125b8b236b02)
 
@@ -110,3 +112,11 @@ tree -I 'documentation|__pycache__|tests|tree.txt' --noreport > tree.txt
 
 ## 👥 Team & Contributors
 [**BME SolarBoat Team**](https://solarboatteam.hu/)
+
+
+## References
+
+<a id="1">[1]</a>
+Tomera M., Alfuth Ł. (June 2020).
+Waypoint Path Controller for Ships. [**[link]**](https://www.transnav.eu/Article_Waypoint_Path_Controller_for_Ships_Tomera,54,1014.html) \
+TransNav, the International Journal on Marine Navigation and Safety of Sea Transportation, Vol. 14, No. 2, doi:10.12716/1001.14.02.14, pp. 375-383, 2020
