@@ -8,13 +8,7 @@ from dataclasses import FrozenInstanceError
 class TestGPSPoint(unittest.TestCase):
 
     def test_constructor(self):
-        props = BlueLadyShipProperties(
-            breadth=...,
-            displacement=...,
-            draft=...,
-            length=...,
-            x_g=...,
-        )
+        props = BlueLadyShipProperties() # Don't set just read
 
         self.assertTrue(props)
 
