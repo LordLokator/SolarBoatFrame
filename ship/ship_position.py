@@ -69,6 +69,44 @@ class ShipPosition(GPSPoint):
 
     # region properties
 
+    @property
+    def XnYn_earth(self) -> tuple[float, float]:
+        Xn = self.Xn
+        Yn = self.Yn
+
+        if Xn is None or not isinstance(Xn, float) or \
+           Yn is None or not isinstance(Yn, float):
+            err_msg = f"XnYn is supposed to be of type float, it is instead \
+                [{type(Xn)}-{type(Yn)}] with value [{Xn}-{Yn}]!"
+
+            logger.critical(err_msg)
+            raise ValueError(err_msg)
+
+        return (Xn, Yn)
+
+    @property
+    def XbYb_body(self) -> tuple[float, float]:
+        """
+        Returns current (Xb, Yb) coordinates relative to the ship's reference
+        frame. Requires self.heading_psi and self.reference_point to be set.
+
+        Returns:
+            tuple[float, float]: (Xb, Yb)
+        """
+
+        if self.reference_point is None or self.heading_psi is None:
+            raise ValueError("Reference point and heading must be set.")
+
+        north, east = self.ned_offset(self.reference_point)
+
+        cos_psi = cos(self.heading_psi)
+        sin_psi = sin(self.heading_psi)
+
+        Xb = cos_psi * north + sin_psi * east
+        Yb = -sin_psi * north + cos_psi * east
+
+        return (Xb, Yb)
+
     # endregion
 
     def update_positin_with_gps_data(self):
