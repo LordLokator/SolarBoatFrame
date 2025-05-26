@@ -3,9 +3,9 @@
 
 from loguru import logger
 import numpy as np
-from gps_coordinate import ObjectiveCoordinate, ShipPosition
+from gps_coordinate import ObjectiveCoordinate
 from gps_coordinate import GPSPoint
-from .ship_properties import BlueLadyShipProperties
+from . import ShipPosition, BlueLadyShipProperties
 
 
 class ShipState:

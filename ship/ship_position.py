@@ -9,9 +9,11 @@ from loguru import logger
 
 from managers import GPSManager
 
-from .geofence import CircularGeofence, PolygonalGeofence
-from .objective import ObjectiveCoordinate
-from .base import GPSPoint
+from gps_coordinate import (
+    GPSPoint,
+    CircularGeofence,
+    PolygonalGeofence
+)
 
 # Setup logging
 LOG_PATH = os.path.abspath(os.path.join("logging", "coordinates.log"))

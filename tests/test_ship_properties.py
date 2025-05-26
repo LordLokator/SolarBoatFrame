@@ -1,7 +1,7 @@
 # tests/test_ship_properties.py
 
 import unittest
-from ship.ship_properties import BlueLadyShipProperties
+from ship import BlueLadyShipProperties
 from dataclasses import FrozenInstanceError
 
 

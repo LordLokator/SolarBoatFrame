@@ -1,10 +1,14 @@
 from loguru import logger
-from gps_coordinate import CircularGeofence
-from gps_coordinate import ObjectiveCoordinate
-from gps_coordinate import ShipPosition
-from gps_coordinate import GPSPoint
-from ship.ship_properties import BlueLadyShipProperties
-from ship.ship_state import ShipState
+from gps_coordinate import (
+    CircularGeofence,
+    ObjectiveCoordinate,
+    GPSPoint
+)
+from ship import (
+    BlueLadyShipProperties,
+    ShipState,
+    ShipPosition
+)
 
 
 class ShipTaskManager:

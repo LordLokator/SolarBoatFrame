@@ -2,9 +2,8 @@ import unittest
 from unittest.mock import MagicMock, patch
 from pyproj import Transformer
 from math import radians, sqrt
-from gps_coordinate import ShipPosition, GPSPoint
-from gps_coordinate.geofence.circular import CircularGeofence
-from ship.ship_state import ShipState
+from gps_coordinate import CircularGeofence, GPSPoint
+from ship import ShipState, ShipPosition
 
 from gps_coordinate.config import (
     WGS84_GPS,

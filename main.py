@@ -6,7 +6,7 @@ import time
 from loguru import logger
 
 from managers import CANManager
-from managers.ship_task_manager import ShipTaskManager
+from ship import ShipTaskManager
 
 
 def main():

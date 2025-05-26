@@ -7,8 +7,9 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from pyproj import Transformer
-from gps_coordinate import GPSPoint, ShipPosition
+from gps_coordinate import GPSPoint
 from gps_coordinate.geofence.circular import CircularGeofence
+from ship import ShipPosition
 
 from gps_coordinate.config import (
     WGS84_GPS,
@@ -16,6 +17,7 @@ from gps_coordinate.config import (
 )
 
 from loguru import logger
+
 LOG_PATH = os.path.abspath(os.path.join("logging", "test_gps_module.log"))
 
 logger.add(
