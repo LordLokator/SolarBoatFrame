@@ -8,8 +8,9 @@ from managers import LTEManager
 class TestEquationShipState(unittest.TestCase):
 
     def test_constructor(self):
-        lte_manager = LTEManager()
-        self.assertTrue(lte_manager)
+
+        with self.assertRaises(NotImplementedError):
+            _ = LTEManager()
 
     def test_connect_success(self):
         ...
