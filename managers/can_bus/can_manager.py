@@ -1,6 +1,8 @@
 import can
+from can.bus import BusState
 from loguru import logger
 import os
+import threading
 
 LOG_PATH = os.path.abspath(os.path.join("logging", "CAN_logs.log"))
 
@@ -22,12 +24,12 @@ logger.add(
 # RUDDER-t, azaz irányt adunk meg, nem a hajó állását
 
 
+# TODO: 1/10 - 1/20 küldjük ki az aktuális állást
 class CANManager:
 
     def __init__(
         self,
         channel: str = "default_channel",
-        bustype: str = "socketcan",
         bitrate: int = 500000,
         interface: str = 'virtual',
     ):
@@ -36,26 +38,71 @@ class CANManager:
 
         Args:
             channel (str, optional): Defaults to "default_channel".
-            bustype (str, optional): Defaults to "socketcan".
             bitrate (int, optional): Defaults to 500000.
             interface (str, optional): Defaults to 'virtual'.
         """
         self.channel = channel
-        self.bustype = bustype
         self.bitrate = bitrate
         self.interface = interface
 
+        self._lock = threading.Lock()
+        self._state = {
+            "u": 0.0,
+            "v": 0.0,
+            "r": 0.0,
+            "rudder_angle": 0.0,
+            "engine_rpm": 0.0
+        }
+
         self.bus = can.interface.Bus(
             channel=self.channel,
-            # bustype=self.bustype, # NOTE: Deprecated and causes error!
             bitrate=self.bitrate,
             interface=self.interface
         )
+        self._running = True
+        self._recv_thread: threading.Thread = threading.Thread(target=self._receive_loop, daemon=True)
+        self._recv_thread.start()
+
+    def _receive_loop(self):
+        while self._running:
+            msg = self._receive_message(timeout=1.0)
+            if msg:
+                self._handle_message(msg)
+
+    def _handle_message(self, msg: can.Message):
+        with self._lock:
+            try:
+                # TODO: Placeholder
+                if msg.arbitration_id == 0x100:  # velocity info
+                    self._state["u"] = msg.data[0] / 10
+                    self._state["v"] = msg.data[1] / 10
+                    self._state["r"] = msg.data[2] / 10
+
+                elif msg.arbitration_id == 0x101:  # rudder
+                    self._state["rudder_angle"] = msg.data[0] / 10
+
+                elif msg.arbitration_id == 0x102:  # engine
+                    self._state["engine_rpm"] = int.from_bytes(msg.data[0:2], "big")
+
+                logger.debug(f"Updated CAN state from ID 0x{msg.arbitration_id:X}")
+
+            except Exception as e:
+                logger.error(f"Failed to parse CAN message: {e}")
+
+    def read_state(self) -> dict:
+        with self._lock:
+            return self._state.copy()
+
+    def send_control(self, rudder: float, rpm: float):
+        rudder_data = bytes([int(rudder * 10)])
+        rpm_data = int(rpm).to_bytes(2, "big")
+
+        # TODO: sanity checking here
+        self.send_message(arbitration_id=0x200, data=rudder_data)
+        self.send_message(arbitration_id=0x201, data=rpm_data)
 
     def send_message(self, arbitration_id: int, data: bytes):
-        """
-        Send a CAN message.
-        """
+        """Send a CAN message."""
         if not self.bus:
             raise can.exceptions.CanOperationError(f"Bus was not initiated!")
 
@@ -70,33 +117,36 @@ class CANManager:
         except can.CanError as e:
             print(f"Failed to send message: {e}")
 
-    def receive_message(self, timeout: float = 1.0):
-        """
-        Receive a CAN message with an optional timeout.
-        """
+    def _receive_message(self, timeout: float = 1.0):
+        """Receive a CAN message with an optional timeout."""
         if not self.bus:
             raise can.exceptions.CanOperationError(f"Bus was not initiated!")
 
         message = self.bus.recv(timeout=timeout)
         if message:
-            print(f"Message received: {message}")
+            logger.debug(f"Message received: {message}")
         else:
-            print("No message received within the timeout.")
+            logger.debug("No message received within the timeout.")
         return message
 
     def shutdown(self):
-        """
-        Shutdown the CAN manager and clean up resources.
-        """
-        if self.bus:
-            self.bus.shutdown()
-            print("CAN bus shut down.")
+        self._running = False
+        self._recv_thread.join()
+        self.bus.shutdown()
+
+        if not self._recv_thread.is_alive() \
+                and self.bus.state != BusState.ACTIVE \
+                and self.bus.state != BusState.ERROR:
+            logger.info("CANManager shut down.")
+        else:
+            _stats = f"BusState: {self.bus.state} | recv thread isalive: {self._recv_thread.is_alive()}"
+            logger.warning(f"CANManager shutdown anomaly! {_stats}")
 
 
 if __name__ == "__main__":
     can_manager = CANManager(
         channel="vcan0",
-        bustype="socketcan",
+        interface='virtual',
         bitrate=500000
     )
     PAYLOAD: list[int] = [k for k in range(5)]
