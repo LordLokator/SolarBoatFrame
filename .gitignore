@@ -2,6 +2,7 @@
 sandbox.ipynb
 net_config.ini
 _local_*\.*
+tree.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

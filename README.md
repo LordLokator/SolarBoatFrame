@@ -99,6 +99,13 @@ From the root, use this command in terminal:
 [Python basic GPS using geopy and geocoder](https://gist.github.com/LordLokator/e056aad11b58d2d68011c2a2d5450408)
 
 
+To create a file 'tree.txt' with the project layout, use this command in the project root:
+
+```
+tree -I 'documentation|__pycache__|tests|tree.txt' --noreport > tree.txt
+```
+
+
 ---
 
 ## 👥 Team & Contributors
