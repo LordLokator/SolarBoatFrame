@@ -128,7 +128,7 @@ class ShipPosition(GPSPoint):
 
     # endregion
 
-    def update_positin_with_gps_data(self):
+    def update_position_with_gps_data(self):
         lat, lon = self._gps.get_live_location()
         if lat is not None and lon is not None:
             self.set_ship_position(GPSPoint(lat, lon))

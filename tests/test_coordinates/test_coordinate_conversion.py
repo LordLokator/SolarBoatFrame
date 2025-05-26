@@ -116,7 +116,7 @@ class TestCoordinateTransformations(unittest.TestCase):
         self.assertAlmostEqual(Yb, 0.0, places=3)
 
     def test_diagonal_northeast_displacement(self):
-        self.ship_position.update_positin_with_gps_data()
+        self.ship_position.update_position_with_gps_data()
 
         d_north = 50
         d_east = 50
