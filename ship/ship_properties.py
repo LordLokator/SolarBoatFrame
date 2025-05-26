@@ -42,6 +42,11 @@ class LanaShipProperties:
     draft:          float = 0.86    # Td
     displacement:   float = 22.83   # Delta
     x_g:            float = 0.0     # center of gravity x position (usually 0)
+    # inertia_z:      float = 436_830.2
+    # mass:           float = 22_934.4
+    # X_u_dot:        float = -730.5
+    # Y_v_dot:        float = -18_961.8
+    # N_r_dot:        float = -183_519.1
 
     def __post_init__(self):
         logger.info("Using Lana's config.")
