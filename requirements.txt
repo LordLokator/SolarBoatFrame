@@ -7,6 +7,7 @@ shapely # For checking if a polygon contains a point @ GPS
 pyproj  # Python interface to PROJ (cartographic projections and coordinate transformations library)
 
 loguru # Logger
+coverage # unittest run w/ coverage dependancy
 
 ipykernel # for Jupyter Notebooks
 

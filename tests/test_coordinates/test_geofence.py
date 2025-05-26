@@ -17,7 +17,7 @@ class TestCircularGeofence(unittest.TestCase):
         self.assertTrue(self.geofence.contains(inside_point))
 
     def test_point_outside_circle(self):
-        outside_point = GPSPoint(47.5100, 19.0400)
+        outside_point = GPSPoint(47.5100, LEFT_LON)
         self.assertFalse(self.geofence.contains(outside_point))
 
     def test_point_on_boundary(self):
@@ -25,14 +25,19 @@ class TestCircularGeofence(unittest.TestCase):
         self.assertTrue(self.geofence.contains(edge_point))
 
 
+LEFT_LON = 19.0400
+RIGHT_LON = 19.0500
+TOP_LAT = 47.5030
+BOTTOM_LAT = 47.4970
+
 class TestPolygonalGeofence(unittest.TestCase):
 
     def setUp(self):
         self.vertices = [
-            GPSPoint(47.4970, 19.0400),
-            GPSPoint(47.4970, 19.0500),
-            GPSPoint(47.5030, 19.0500),
-            GPSPoint(47.5030, 19.0400)
+            GPSPoint(BOTTOM_LAT, LEFT_LON),
+            GPSPoint(BOTTOM_LAT, RIGHT_LON),
+            GPSPoint(TOP_LAT, RIGHT_LON),
+            GPSPoint(TOP_LAT, LEFT_LON)
         ]
         self.geofence = PolygonalGeofence(vertices=self.vertices)
 
@@ -45,14 +50,41 @@ class TestPolygonalGeofence(unittest.TestCase):
         self.assertFalse(self.geofence.contains(outside_point))
 
     def test_point_on_edge_contains(self):
-        edge_point = GPSPoint(47.4970, 19.0450)
+        edge_point = GPSPoint(BOTTOM_LAT, 19.0450)
         self.assertFalse(self.geofence.contains(edge_point))  # Don't accept as "inside"
 
     def test_point_on_edge_covers(self):
         # Use 'geofence._covers' if the vertecies and sides of the polygon are acceptable.
 
-        edge_point = GPSPoint(47.4970, 19.0450)
+        edge_point = GPSPoint(BOTTOM_LAT, 19.0450)
         self.assertTrue(self.geofence._covers(edge_point))  # Accept as "inside"
+
+    def test_too_few_init_points(self):
+        # Test ship properties' immutability
+
+        _insufficient_vertices = [
+            GPSPoint(BOTTOM_LAT, LEFT_LON),
+            GPSPoint(BOTTOM_LAT, RIGHT_LON)
+        ]
+
+        with self.assertRaises(ValueError):
+            PolygonalGeofence(
+                vertices=_insufficient_vertices
+            )
+
+    def test_colinear_init_points(self):
+        # Test ship properties' immutability
+
+        _insufficient_vertices = [
+            GPSPoint(BOTTOM_LAT, LEFT_LON),
+            GPSPoint(BOTTOM_LAT, RIGHT_LON),
+            GPSPoint(BOTTOM_LAT, 19.0600)
+        ]
+
+        with self.assertRaises(ValueError):
+            PolygonalGeofence(
+                vertices=_insufficient_vertices
+            )
 
 
 if __name__ == "__main__":
