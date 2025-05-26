@@ -1,4 +1,4 @@
-# tests/test_gps_module.py
+# tests/test_ship_properties.py
 
 import unittest
 from ship_state.ship_properties import BlueLadyShipProperties

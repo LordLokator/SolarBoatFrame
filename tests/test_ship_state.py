@@ -1,4 +1,4 @@
-# tests/test_gps_module.py
+# tests/test_ship_state.py
 
 from copy import deepcopy as copy
 import unittest
