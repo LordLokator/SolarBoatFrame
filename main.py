@@ -4,11 +4,12 @@
 from datetime import datetime
 import time
 from loguru import logger
+from memory_profiler import profile
 
 from managers import CANManager
 from ship import ShipTaskManager
 
-
+@profile
 def main():
     logger.info(f"Starting application at {datetime.now()}")
 
