@@ -35,14 +35,19 @@ class ShipState:
 
     # region Properties
     @property
-    def Xn(self):
+    def XnYn(self) -> tuple[float, float]:
         Xn = self.position.Xn
-        if Xn is None or not isinstance(Xn, float):
-            err_msg = f"Xn is supposed to be of type float, it is instead [{type(Xn)}] with value [{Xn}]!"
+        Yn = self.position.Yn
+
+        if Xn is None or not isinstance(Xn, float) or \
+           Yn is None or not isinstance(Yn, float):
+            err_msg = f"XnYn is supposed to be of type float, it is instead \
+                [{type(Xn)}-{type(Yn)}] with value [{Xn}-{Yn}]!"
+
             logger.critical(err_msg)
             raise ValueError(err_msg)
 
-        return Xn
+        return (Xn, Yn)
 
     @property
     def Yn(self):
