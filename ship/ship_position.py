@@ -1,6 +1,6 @@
 # ship/ship_position.py
 
-from math import sin, cos
+from math import atan2, sin, cos
 import os
 from threading import Lock
 import threading
@@ -46,7 +46,6 @@ class ShipPosition(GPSPoint):
             return
 
         self._initialized = True
-
 
         self._gps = self._gps = gps_manager if gps_manager else GPSManager()
 
@@ -127,6 +126,30 @@ class ShipPosition(GPSPoint):
         return (Xb, Yb)
 
     # endregion
+
+    def cross_track_error(self, current_segment: tuple[GPSPoint, GPSPoint]) -> float:
+        """Eq. (41)"""
+        wp_start, wp_end = current_segment
+        x, y = self.XnYn_earth
+        xk, yk = wp_start.Xn, wp_start.Yn
+        psi_k = self.compute_segment_course(wp_start, wp_end)
+
+        return (x - xk) * sin(psi_k) - (y - yk) * cos(psi_k)
+
+    def heading_error(self, desired_heading: float) -> float:
+        """Eq. (46)"""
+        with self._lock:
+            delta_psi = desired_heading - self._heading_psi
+            # https://www.desmos.com/calculator/woh8uxmrke
+            # prevents jitter / oscillation by normalizing to ±180°
+            return atan2(sin(delta_psi), cos(delta_psi))
+
+    def compute_segment_course(wp_start: GPSPoint, wp_end: GPSPoint) -> float:
+        """Eq. (4)"""
+        dx = wp_end.Xn - wp_start.Xn
+        dy = wp_end.Yn - wp_start.Yn
+
+        return atan2(dy, dx)
 
     def update_position_with_gps_data(self):
         lat, lon = self._gps.get_live_location()
