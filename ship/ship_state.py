@@ -12,8 +12,7 @@ from . import ShipPosition, BlueLadyShipProperties
 
 
 class ShipState:
-    """Manages the dynamic properties of the ship, like current position
-    """
+    """Manages the dynamic properties of the ship, like current position"""
 
     _instance = None
 
@@ -24,74 +23,24 @@ class ShipState:
 
     def __init__(self, starting_position: ShipPosition):
         self.position: ShipPosition = starting_position
-        self.origin_position: GPSPoint = GPSPoint(self.position.latitude, self.position.longitude)
         self.route: list[ObjectiveCoordinate] = []  # init?
-        self.properties = BlueLadyShipProperties()
-
-        self.psi: float = 0.0  # heading in radians (w.r.t North)
-        self.u: float = 0.0  # surge speed
-        self.v: float = 0.0  # sway speed
-        self.r: float = 0.0  # yaw rate
+        self.properties = BlueLadyShipProperties()  # change for Lana!
 
     # region Properties
-    @property
-    def XnYn(self) -> tuple[float, float]:
-        Xn = self.position.Xn
-        Yn = self.position.Yn
-
-        if Xn is None or not isinstance(Xn, float) or \
-           Yn is None or not isinstance(Yn, float):
-            err_msg = f"XnYn is supposed to be of type float, it is instead \
-                [{type(Xn)}-{type(Yn)}] with value [{Xn}-{Yn}]!"
-
-            logger.critical(err_msg)
-            raise ValueError(err_msg)
-
-        return (Xn, Yn)
-
-    @property
-    def Yn(self):
-        Yn = self.position.Yn
-        if Yn is None or not isinstance(Yn, float):
-            err_msg = f"Yn is supposed to be of type float, it is instead [{type(Yn)}] with value [{Yn}]!"
-            logger.critical(err_msg)
-            raise ValueError(err_msg)
-
-        return Yn
-
-    @property
-    def state_vector(self) -> np.ndarray:
-        """(Equation 1)
-
-        Returns:
-            np.ndarray: A vector in R⁶ describing the current state vector of the ship.
-        """
-        return np.concatenate((self.eta, self.nu))
-
-    @property
-    def eta(self) -> np.ndarray:
-        """Return position and heading vector in Earth-fixed frame."""
-        return np.array([self.Xn, self.Yn, self.psi])
-
-    @property
-    def nu(self) -> np.ndarray:
-        """Return position and heading vector in body-fixed frame."""
-        self.position.ned_offset_from(self.origin_position)
-        return np.array([self.u, self.v, self.r])
 
     # endregion
 
     def eta_dot(self) -> np.ndarray:
         """Calculate Earth-frame velocity \u03b7_dot = R(psi) * nu (Equation 2)."""
         R = self.rotation_matrix()
-        nu = self.nu()
-        return R @ nu
+        return R @ self.position.nu
 
     def rotation_matrix(self) -> np.ndarray:
         """Return the rotation matrix R(psi) from body to Earth frame (Equation 3)."""
 
-        c = np.cos(self.psi)
-        s = np.sin(self.psi)
+        _psi = self.position.heading_psi
+        c = np.cos(_psi)
+        s = np.sin(_psi)
 
         return np.array([
             [c, -s, 0],
