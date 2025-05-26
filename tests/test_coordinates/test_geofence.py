@@ -1,9 +1,11 @@
 # tests/test_geofence.py
 
 import unittest
-from gps_coordinate.geofence.circular import CircularGeofence
-from gps_coordinate.geofence.polygonal import PolygonalGeofence
-from gps_coordinate.base import GPSPoint
+from gps_coordinate import (
+    CircularGeofence,
+    PolygonalGeofence,
+    GPSPoint
+)
 
 
 class TestCircularGeofence(unittest.TestCase):
@@ -29,6 +31,7 @@ LEFT_LON = 19.0400
 RIGHT_LON = 19.0500
 TOP_LAT = 47.5030
 BOTTOM_LAT = 47.4970
+
 
 class TestPolygonalGeofence(unittest.TestCase):
 

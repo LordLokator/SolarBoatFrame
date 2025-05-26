@@ -2,7 +2,7 @@
 
 from copy import deepcopy as copy
 import unittest
-from gps_coordinate.base import GPSPoint
+from gps_coordinate import GPSPoint
 from ship import ShipState
 
 # Szántódi rév

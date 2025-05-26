@@ -3,8 +3,11 @@
 
 from loguru import logger
 import numpy as np
-from gps_coordinate import ObjectiveCoordinate
-from gps_coordinate import GPSPoint
+from gps_coordinate import (
+    ObjectiveCoordinate,
+    GPSPoint
+)
+
 from . import ShipPosition, BlueLadyShipProperties
 
 

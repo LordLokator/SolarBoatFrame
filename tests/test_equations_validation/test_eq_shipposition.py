@@ -7,8 +7,10 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from pyproj import Transformer
-from gps_coordinate import GPSPoint
-from gps_coordinate.geofence.circular import CircularGeofence
+from gps_coordinate import (
+    GPSPoint,
+    CircularGeofence
+)
 from ship import ShipPosition
 
 from gps_coordinate.config import (

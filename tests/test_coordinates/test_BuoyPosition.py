@@ -3,7 +3,10 @@
 import os
 import unittest
 from copy import deepcopy as copy
-from gps_coordinate import GPSPoint, BuoyPosition, ObjectiveCoordinate
+from gps_coordinate import (
+    GPSPoint,
+    BuoyPosition
+)
 
 from loguru import logger
 LOG_PATH = os.path.abspath(os.path.join("logging", "test_gps_module.log"))
