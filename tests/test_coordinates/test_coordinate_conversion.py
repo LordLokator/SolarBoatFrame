@@ -43,6 +43,13 @@ class TestCoordinateTransformations(unittest.TestCase):
         self.ship_state = ShipState(self.ship_position)
 
     def _move_ship(self, d_north_m=0, d_east_m=0):
+        """Moves the lat-lon for the self.ship_position object using the two params. \
+        Does so by transforming between GPS and UTM.
+
+        Args:
+            d_north_m (int, optional): Move N-S. Defaults to 0.
+            d_east_m (int, optional): Move E-W. Defaults to 0.
+        """
         x0, y0 = self.transformer_to_utm.transform(self.origin_lon, self.origin_lat)
         x1 = x0 + d_east_m
         y1 = y0 + d_north_m
