@@ -152,6 +152,8 @@ class ShipPosition(GPSPoint):
 
     # endregion
 
+    # region methods and cirills
+
     def cross_track_error(self, current_segment: tuple[GPSPoint, GPSPoint]) -> float:
         """Eq. (41)"""
         wp_start, wp_end = current_segment
@@ -172,17 +174,17 @@ class ShipPosition(GPSPoint):
             # prevents jitter / oscillation by normalizing to ±180°
             return atan2(sin(delta_psi), cos(delta_psi))
 
-    def compute_segment_course(wp_start: GPSPoint, wp_end: GPSPoint) -> float:
-        """Eq. (4)"""
-        dx = wp_end.Xn - wp_start.Xn
-        dy = wp_end.Yn - wp_start.Yn
-
-        return atan2(dy, dx)
-
     def update_position_with_gps_data(self):
         lat, lon = self._gps.get_live_location()
         if lat is not None and lon is not None:
-            self.set_ship_position(GPSPoint(lat, lon))
+            position = GPSPoint(lat, lon)
+
+            if self.geofence and not self.geofence.contains(position):
+                _distance = self.haversine_distance(self.geofence.center)
+                _radius = self.geofence.radius
+                logger.warning(f"We are outside the geofence by [{_distance - _radius}] meters!")
+
+            self.set_coordinates(position)
 
     def _update_loop(self):
         while self._running:
@@ -241,14 +243,31 @@ class ShipPosition(GPSPoint):
         Returns:
             bool: Success.
         """
-        if not self.geofence.contains(position):
-            logger.warning("Attempted to move outside geofence!")
+        if self.geofence and not self.geofence.contains(position):
+            _distance = self.haversine_distance(self.geofence.center)
+            _radius = self.geofence.radius
+            logger.warning(f"We are outside the geofence by [{_distance - _radius}] meters!")
             return False
 
-        else:
-            self.set_coordinates(position)
-            return True
+        self.set_coordinates(position)
+        return True
 
     def is_within_geofence(self) -> bool:
-        ship_in_geofence = self.geofence.contains(self)
-        return ship_in_geofence
+        return self.geofence.contains(self)
+
+    def target_is_within_geofence(self, target: GPSPoint) -> bool:
+        return self.geofence.contains(target)
+
+    # endregion
+
+    # region static methods
+
+    @staticmethod  # class-level, doesn't recieve a 'self' param
+    def compute_segment_course(wp_start: GPSPoint, wp_end: GPSPoint) -> float:
+        """Eq. (4)"""
+        dx = wp_end.Xn - wp_start.Xn
+        dy = wp_end.Yn - wp_start.Yn
+
+        return atan2(dy, dx)
+
+    # endregion
