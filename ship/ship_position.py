@@ -67,6 +67,16 @@ class ShipPosition(GPSPoint):
             self._running = False
             self._thread: threading.Thread = None
 
+            self.reference_point: GPSPoint = GPSPoint(
+                self.latitude,
+                self.longitude
+            )
+
+            self.heading_psi: float = 0.0  # heading in radians (w.r.t North)
+            self.u: float = 0.0  # surge speed
+            self.v: float = 0.0  # sway speed
+            self.r: float = 0.0  # yaw rate
+
     # region properties
 
     @property
