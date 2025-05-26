@@ -10,16 +10,22 @@ We based our implementation on the work [[1]](#1) of Tomera M. and Alfuth Ł.
 ---
 
 ## 🌟 Core Objectives
-
 ### Version 0:
-- [ ] **CAN Bus Management**:
-  - Handle communication between actuators and end devices on the CAN bus.
-- [ ] **Sensor Integration**:
-  - Connect and test sensors.
-- [ ] **Decision-Making Module**:
-  - Orchestrates autonomous navigation and control of the vehicle.
-- [ ] **Communication Channels**:
-  - Enable communication via 4G for real-time data transfer.
+- [x] **Ship Coordinate System & Navigation Math**
+  - Convert GPS coordinates to Earth/body-fixed frames.
+  - Compute heading and cross-track errors (Eq. 4, 41, 46).
+- [x] **GPS Integration**
+  - Real-time GPS tracking with NED offsets and geofence safety.
+- [x] **Waypoint Navigation Controller**
+  - PDPI control algorithm as described in [1].
+- [x] **ShipPosition Class**
+  - Centralized source for position, heading, velocity vectors (`eta`, `nu`, `U`).
+- [x] **Threaded GPS Update Loop**
+  - Background polling for position updates.
+- [x] **Clean CANManager Interface**
+  - Message receiving via background thread and `read_state()` access.
+- [x] **Modular Architecture (ShipState / ShipTaskManager)**
+  - Separates state handling from control logic.
 
 > [!WARNING]
 > 4G is notoriously unstable near borders. Take extra care.
@@ -28,30 +34,38 @@ We based our implementation on the work [[1]](#1) of Tomera M. and Alfuth Ł.
 
 ## 🛣️ Roadmap
 
+### 🔄 In Progress
+- [ ] **Route Management in ShipState**
+  - Automatic segment switching and waypoint arrival logic.
+- [ ] **ShipTaskManager Control Loop**
+  - Generate rudder/engine commands via PDPI based on state.
+- [ ] **CAN Protocol Finalization**
+  - Implement exact message layout for incoming/outgoing data.
+
 ### 🚀 Upcoming Features:
-- [ ] **Modular Sensor Drivers**:
-  - Add drivers for more specialized sensors and dynamic configuration.
-- [ ] **4G Redundancy**:
-  - Introduce failover mechanisms for robust communication.
-- [ ] **GPS Data Enrichment**:
-  - Fuse GPS data with additional telemetry for better localization.
-- [ ] **Simulation Support**:
-  - Create hooks for Unreal Engine or other simulators to test the framework.
+- [ ] **Path History Logging**
+  - Store past position, heading, and error metrics.
+- [ ] **Testing & Replay Tools**
+  - Replay logs for testing controller behavior.
+- [ ] **Simulated GPS / CAN Sources**
+  - Offline testing with mocked hardware input.
+- [ ] **Web UI or CLI Dashboard**
+  - Real-time monitoring and override tools.
 
 ---
 
 ## 📦 Features
 
-- 🔌 **Sensor Integration**:
-  - Support for various dedicated sensors (e.g., LiDAR, cameras, depth sensors).
-- 📡 **CAN Bus Communication**:
-  - Robust messaging between devices, including actuators and controllers.
-- 🌍 **GPS Support**:
-  - Real-time positioning with logging and analysis.
-- 📶 **4G Communication**:
-  - Enable remote data transfer and decision relays.
-- 🧠 **Decision-Making Module**:
-  - A pluggable interface for integrating autonomous control logic.
+- 🔌 **Sensor Integration**
+  - Support for GPS and CAN-fed ship metrics (u, v, r).
+- 📡 **CAN Bus Communication**
+  - Bidirectional messaging with actuators and state publishers.
+- 🧭 **Waypoint Controller**
+  - Real-time rudder angle and surge speed computation.
+- 🌍 **Geofencing**
+  - Ensure test or race operation stays in safe bounds.
+- 🧠 **Modular Task Management**
+  - Decoupled design allows easy testing and component replacement.
 
 ---
 
