@@ -3,7 +3,7 @@
 from copy import deepcopy as copy
 import unittest
 from gps_coordinate.base import GPSPoint
-from ship_state.ship_state import ShipState
+from ship.ship_state import ShipState
 
 # Szántódi rév
 SZANTOD_LAT = 46.87993481783788

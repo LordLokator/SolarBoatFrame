@@ -3,8 +3,8 @@ from gps_coordinate import CircularGeofence
 from gps_coordinate import ObjectiveCoordinate
 from gps_coordinate import ShipPosition
 from gps_coordinate import GPSPoint
-from ship_state.ship_properties import BlueLadyShipProperties
-from ship_state.ship_state import ShipState
+from ship.ship_properties import BlueLadyShipProperties
+from ship.ship_state import ShipState
 
 
 class ShipTaskManager:

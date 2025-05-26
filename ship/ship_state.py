@@ -1,4 +1,4 @@
-# ship_state/ship_state.py
+# ship/ship_state.py
 """Ide kellenek a dinamikus tulajdonságok."""
 
 from loguru import logger

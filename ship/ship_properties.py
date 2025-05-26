@@ -1,4 +1,4 @@
-# ship_state/ship_properties.py
+# ship/ship_properties.py
 """Ide kellenek a statikus tulajdonságok, pl hajó merülése, vagy közvetlenül ebből származtatott mennyiségek."""
 
 

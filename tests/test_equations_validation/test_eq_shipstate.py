@@ -7,7 +7,7 @@ from pyproj import Transformer
 from gps_coordinate.base import GPSPoint
 from gps_coordinate.geofence.circular import CircularGeofence
 from gps_coordinate.ship_position import ShipPosition
-from ship_state.ship_state import ShipState
+from ship.ship_state import ShipState
 
 from gps_coordinate.config import (
     WGS84_GPS,
