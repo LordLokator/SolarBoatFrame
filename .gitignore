@@ -1,7 +1,7 @@
 # Project-specific
 sandbox.ipynb
 net_config.ini
-_local_*\.py
+_local_*\.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
