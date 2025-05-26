@@ -35,7 +35,32 @@ class ShipState:
 
     # region Properties
 
+    @property
+    def current_segment(self) -> tuple[GPSPoint, GPSPoint]:
+        try:
+            return (self.route[self.current_segment_index],
+                    self.route[self.current_segment_index + 1])
+        except IndexError:
+            logger.warning("No next segment available")
+            return None
+
     # endregion
+
+    def advance_to_next_segment(self):
+        if self.current_segment_index + 2 <= len(self.route):
+            self.current_segment_index += 1
+            logger.info(f"Advanced to segment {self.current_segment_index}")
+        else:
+            logger.info("Final segment reached")
+
+
+    def update_from_can(self, u: float, v: float, r: float, rudder_angle: float, engine_rpm: float):
+        # Use this function when the CANManager reads new data
+        self.position.u = u
+        self.position.v = v
+        self.position.r = r
+        self.rudder_angle = rudder_angle
+        self.engine_rpm = engine_rpm
 
     def eta_dot(self) -> np.ndarray:
         """Calculate Earth-frame velocity \u03b7_dot = R(psi) * nu (Equation 2)."""
@@ -54,13 +79,3 @@ class ShipState:
             [s,  c, 0],
             [0,  0, 1]
         ])
-
-    def get_body_referenced_coordinates(self, reference) -> tuple[float, float]:
-        Xb, Yb = self.position._get_body_referenced_coordinates(
-            reference=reference,
-            heading_psi=self.psi
-        )
-        return (Xb, Yb)
-
-    # TODO
-    ...
