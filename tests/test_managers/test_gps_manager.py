@@ -20,17 +20,20 @@ class TestGPSManager(unittest.TestCase):
 
     @patch('managers.gps_sensor.gps_manager.Serial')
     @patch('managers.gps_sensor.gps_manager.UBXReader')
-    def test_initialization(self, mock_ubxreader, mock_serial):
+    def test_initialization(self, mock_ubxreader_cls, mock_serial):
+        mock_reader = MagicMock()
+        mock_reader.read.return_value = (b'', MagicMock(lat=50.0, lon=8.0))
+        mock_ubxreader_cls.return_value = mock_reader
+
         gps = GPSManager()
         mock_serial.assert_called_once()
-        mock_ubxreader.assert_called_once()
+        mock_ubxreader_cls.assert_called_once()
         self.assertIsNotNone(gps.stream)
         self.assertIsNotNone(gps.ubr)
         gps.close()
 
-    @patch('managers.gps_sensor.gps_manager.Serial')
     @patch('managers.gps_sensor.gps_manager.UBXReader')
-    def test_get_location_valid(self, mock_ubxreader_cls, mock_serial):
+    def test_get_location_valid(self, mock_ubxreader_cls):
         mock_reader = MagicMock()
         mock_reader.read.return_value = (b'', MagicMock(lat=50.0, lon=8.0))
         mock_ubxreader_cls.return_value = mock_reader
@@ -41,9 +44,8 @@ class TestGPSManager(unittest.TestCase):
         self.assertEqual(lon, 8.0)
         gps.close()
 
-    @patch('managers.gps_sensor.gps_manager.Serial')
     @patch('managers.gps_sensor.gps_manager.UBXReader')
-    def test_get_location_exception(self, mock_ubxreader_cls, mock_serial):
+    def test_get_location_exception(self, mock_ubxreader_cls):
         mock_reader = MagicMock()
         mock_reader.read.side_effect = Exception("Read failed")
         mock_ubxreader_cls.return_value = mock_reader
