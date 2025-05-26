@@ -62,11 +62,11 @@ class GPSManager:
                 logger.debug("Waiting for GPS fix...")
 
             except Exception as e:
-                logger.exception("Error while reading location: {}", e)
+                pass # We don't care really. Error is logged below.
 
             time.sleep(interval)
 
-        logger.warning("GPS fix not acquired within timeout.")
+        logger.error("GPS fix not acquired within timeout.")
         return None, None
 
     def close(self):
