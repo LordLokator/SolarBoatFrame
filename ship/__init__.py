@@ -1,4 +1,4 @@
-# __init__.py
+# ship/__init__.py
 
 from .ship_position import ShipPosition
 from .ship_properties import BlueLadyShipProperties, LanaShipProperties

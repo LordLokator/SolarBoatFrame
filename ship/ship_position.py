@@ -1,4 +1,4 @@
-# ship_position.py
+# ship/ship_position.py
 
 from math import sin, cos
 import os
