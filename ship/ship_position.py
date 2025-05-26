@@ -5,6 +5,7 @@ import os
 from threading import Lock
 import threading
 import time
+from typing import Optional
 from loguru import logger
 
 from managers import GPSManager
@@ -72,12 +73,25 @@ class ShipPosition(GPSPoint):
                 self.longitude
             )
 
-            self.heading_psi: float = 0.0  # heading in radians (w.r.t North)
+            self._heading_psi: float = 0.0  # heading in radians (w.r.t North)
             self.u: float = 0.0  # surge speed
             self.v: float = 0.0  # sway speed
             self.r: float = 0.0  # yaw rate
 
     # region properties
+
+    @property
+    def heading_psi(self) -> Optional[float]:
+        """Current heading angle in radians (from North, right-handed)."""
+        with self._lock:
+            return self._heading_psi
+
+    @heading_psi.setter
+    def heading_psi(self, value_rad: float):
+        """Sets the heading angle and logs the access."""
+        with self._lock:
+            self._heading_psi = value_rad
+            logger.debug("Heading angle (ψ) updated to {:.3f} rad", value_rad)
 
     @property
     def XnYn_earth(self) -> tuple[float, float]:
