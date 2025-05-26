@@ -7,6 +7,7 @@ import threading
 import time
 from typing import Optional
 from loguru import logger
+import numpy as np
 
 from managers import GPSManager
 
@@ -72,7 +73,31 @@ class ShipPosition(GPSPoint):
         self.v: float = 0.0  # sway speed
         self.r: float = 0.0  # yaw rate
 
-    # region properties
+    # region properties@property
+
+    @property
+    def U(self) -> float:
+        return (self.u**2 + self.v**2)**0.5
+
+    @property
+    def state_vector(self) -> np.ndarray:
+        """(Equation 1)
+
+        Returns:
+            np.ndarray: A vector in R⁶ describing the current state vector of the ship.
+        """
+        return np.concatenate((self.eta, self.nu))
+
+    @property
+    def eta(self) -> np.ndarray:
+        """Return position and heading vector in Earth-fixed frame."""
+        return np.array([self.Xn, self.Yn, self.heading_psi])
+
+    @property
+    def nu(self) -> np.ndarray:
+        """Return position and heading vector in body-fixed frame."""
+        self.ned_offset_from(self.reference_point)
+        return np.array([self.u, self.v, self.r])
 
     @property
     def heading_psi(self) -> Optional[float]:
@@ -130,11 +155,14 @@ class ShipPosition(GPSPoint):
     def cross_track_error(self, current_segment: tuple[GPSPoint, GPSPoint]) -> float:
         """Eq. (41)"""
         wp_start, wp_end = current_segment
-        x, y = self.XnYn_earth
+
         xk, yk = wp_start.Xn, wp_start.Yn
         psi_k = self.compute_segment_course(wp_start, wp_end)
 
-        return (x - xk) * sin(psi_k) - (y - yk) * cos(psi_k)
+        x, y = self.XnYn_earth
+
+        # sin(ψk)*[x(t) – xk] – cos(ψk)*[y(t) – yk]
+        return sin(psi_k) * (x - xk) - cos(psi_k) * (y - yk)
 
     def heading_error(self, desired_heading: float) -> float:
         """Eq. (46)"""
