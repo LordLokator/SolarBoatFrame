@@ -31,7 +31,7 @@ class GPSPoint:
     # _TRANSFORMER = Transformer.from_crs(WGS84_GPS, EPSG_32633_BALATON, always_xy=True)
     # _TRANSFORMER_2_WGS = Transformer.from_crs(EPSG_32633_BALATON, WGS84_GPS, always_xy=True)
 
-    def __init__(self, latitude: float, longitude: float, cs_from=WGS84_GPS, crs_to=EPSG_32634_BP):
+    def __init__(self, latitude: float, longitude: float, cs_from=WGS84_GPS, crs_to=EPSG_32633_BALATON):
 
         self._TRANSFORMER = Transformer.from_crs(cs_from, crs_to, always_xy=True)
         self.transformer_target_name: str = ({
