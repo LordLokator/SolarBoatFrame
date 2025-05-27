@@ -25,6 +25,18 @@ logger.add(
 
 
 # TODO: 1/10 - 1/20 küldjük ki az aktuális állást
+
+
+ARBITRATION_ID_LOOKUP_TABLE = {
+    'OUT_RUDDER': 0x200,
+    'OUT_ENGINE': 0x201,
+
+    'IN_VELOCITY_U_V_R': 0x100,
+    'IN_RUDDER_ANGLE': 0x101,
+    'IN_ENGINE_RPM': 0x102,
+}
+
+
 class CANManager:
 
     def __init__(
@@ -71,17 +83,18 @@ class CANManager:
 
     def _handle_message(self, msg: can.Message):
         with self._lock:
+
             try:
                 # TODO: Placeholder
-                if msg.arbitration_id == 0x100:  # velocity info
+                if msg.arbitration_id == ARBITRATION_ID_LOOKUP_TABLE['IN_VELOCITY_U_V_R']:  # velocity info
                     self._state["u"] = msg.data[0] / 10
                     self._state["v"] = msg.data[1] / 10
                     self._state["r"] = msg.data[2] / 10
 
-                elif msg.arbitration_id == 0x101:  # rudder
+                elif msg.arbitration_id == ARBITRATION_ID_LOOKUP_TABLE['IN_RUDDER_ANGLE']:  # rudder
                     self._state["rudder_angle"] = msg.data[0] / 10
 
-                elif msg.arbitration_id == 0x102:  # engine
+                elif msg.arbitration_id == ARBITRATION_ID_LOOKUP_TABLE['IN_ENGINE_RPM']:  # engine
                     self._state["engine_rpm"] = int.from_bytes(msg.data[0:2], "big")
 
                 logger.debug(f"Updated CAN state from ID 0x{msg.arbitration_id:X}")
@@ -98,8 +111,8 @@ class CANManager:
         rpm_data = int(rpm).to_bytes(2, "big")
 
         # TODO: sanity checking here
-        self.send_message(arbitration_id=0x200, data=rudder_data)
-        self.send_message(arbitration_id=0x201, data=rpm_data)
+        self.send_message(arbitration_id=ARBITRATION_ID_LOOKUP_TABLE['OUT_RUDDER'], data=rudder_data)
+        self.send_message(arbitration_id=ARBITRATION_ID_LOOKUP_TABLE['OUT_ENGINE'], data=rpm_data)
 
     def send_message(self, arbitration_id: int, data: bytes):
         """Send a CAN message."""
@@ -149,7 +162,9 @@ if __name__ == "__main__":
         interface='virtual',
         bitrate=500000
     )
+    # testing main, notice 'virtual'.
+
     PAYLOAD: list[int] = [k for k in range(5)]
     can_manager.send_message(arbitration_id=0x123, data=PAYLOAD)
-    can_manager.receive_message(timeout=2.0)
-    can_manager
+    can_manager._receive_message(timeout=2.0)  # not sure if this works because of race condition!
+    print(can_manager._state)
