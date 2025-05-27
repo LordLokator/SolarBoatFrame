@@ -61,6 +61,15 @@ class GPSPoint:
         _, y = self._TRANSFORMER.transform(self.longitude, self.latitude)
         return y
 
+    def set_from_Xn_Yn(self, x: float, y: float) -> None:
+        """Set GPSPoint using projected coordinates (Xn, Yn)"""
+        lon, lat = self._TRANSFORMER.transform(x, y, direction='INVERSE')
+        with self._lock:
+            logger.debug(f"Setting from XY=({x:.2f}, {y:.2f}) → latlon=({lat:.6f}, {lon:.6f})")
+            self.latitude = lat
+            self.longitude = lon
+
+
     def _utm_zone(self):
         return int((self.longitude + 180) / 6) + 1
 
