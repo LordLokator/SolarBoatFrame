@@ -4,7 +4,6 @@
 
 from dataclasses import dataclass
 import os
-from textwrap import dedent  # removes unneded space from the beginning of strings.
 from loguru import logger
 
 LOG_PATH = os.path.abspath(os.path.join("logging", "ship_state.log"))
@@ -26,11 +25,19 @@ class BlueLadyShipProperties:
     displacement:   float = 22.83   # Delta
     x_g:            float = 0.0     # center of gravity x position (usually 0)
 
+    # inertia_z:      float = 436_830.2
+    # mass:           float = 22_934.4
+    # X_u_dot:        float = -730.5
+    # Y_v_dot:        float = -18_961.8
+    # N_r_dot:        float = -183_519.1
+
+    max_rudder_deg: float = 35.0   # Rudder maximum, in degrees
+
     def __post_init__(self):
         logger.warning("This is the Blue Lady's config for testing purposes!")
-        logger.debug(dedent(
+        logger.debug(
             f"""{type(self).__name__} object, params: \n | length: {self.length} \n | breadth: {self.breadth} \n | draft: {self.draft} \n | displacement: {self.displacement} \n | x_g: {self.x_g}"""
-        ))
+        )
 
 
 @dataclass(frozen=True)
@@ -42,14 +49,17 @@ class LanaShipProperties:
     draft:          float = 0.86    # Td
     displacement:   float = 22.83   # Delta
     x_g:            float = 0.0     # center of gravity x position (usually 0)
+
     # inertia_z:      float = 436_830.2
     # mass:           float = 22_934.4
     # X_u_dot:        float = -730.5
     # Y_v_dot:        float = -18_961.8
     # N_r_dot:        float = -183_519.1
 
+    max_rudder_deg: float = 35.0   # Rudder maximum, in degrees
+
     def __post_init__(self):
         logger.info("Using Lana's config.")
-        logger.debug(dedent(
+        logger.debug(
             f"""{type(self).__name__} object, params: \n | length: {self.length} \n | breadth: {self.breadth} \n | draft: {self.draft} \n | displacement: {self.displacement} \n | x_g: {self.x_g}"""
-        ))
+        )

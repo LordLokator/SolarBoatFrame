@@ -89,5 +89,8 @@ class ShipTaskManager:
             self.k_y_i * self.y_error_integral
         )
 
-        # Clamp to ±35° in radians
-        return float(np.clip(rudder, np.radians(-35), np.radians(35)))
+        max_rudder_deg = self.ship_properties.max_rudder_deg
+        rudder = float(np.clip(rudder, -np.radians(max_rudder_deg), np.radians(max_rudder_deg)))
+
+        # Clamp to ±rudder in radians
+        return rudder
