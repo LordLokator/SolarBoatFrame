@@ -8,6 +8,7 @@ pyproj  # Python interface to PROJ (cartographic projections and coordinate tran
 
 loguru # Logger
 coverage # unittest run w/ coverage dependancy
+memory_profiler
 
 ipykernel # for Jupyter Notebooks
 
