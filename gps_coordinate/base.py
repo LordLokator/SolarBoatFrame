@@ -7,6 +7,8 @@ from loguru import logger
 import warnings
 import os
 
+from pyproj.enums import TransformDirection
+
 from .config import (
     WGS84_GPS,
     EPSG_32634_BP,
@@ -27,13 +29,17 @@ logger.add(
 
 class GPSPoint:
 
-    _TRANSFORMER: Transformer = None
-    # _TRANSFORMER = Transformer.from_crs(WGS84_GPS, EPSG_32633_BALATON, always_xy=True)
-    # _TRANSFORMER_2_WGS = Transformer.from_crs(EPSG_32633_BALATON, WGS84_GPS, always_xy=True)
+    cs_from=WGS84_GPS
+    crs_to=EPSG_32633_BALATON
+    _TRANSFORMER: Transformer = Transformer.from_crs(cs_from, crs_to, always_xy=True)
 
     def __init__(self, latitude: float, longitude: float, cs_from=WGS84_GPS, crs_to=EPSG_32633_BALATON):
+        if cs_from != GPSPoint.cs_from or crs_to != GPSPoint.crs_to:
+            logger.error("Using custom CRS transformer for this instance.")
+            self._transformer = Transformer.from_crs(cs_from, crs_to, always_xy=True)
+        else:
+            self._transformer = GPSPoint._TRANSFORMER
 
-        self._TRANSFORMER = Transformer.from_crs(cs_from, crs_to, always_xy=True)
         self.transformer_target_name: str = ({
             "EPSG_32634_BP": EPSG_32634_BP,
             "EPSG_32633_BALATON": EPSG_32633_BALATON,
@@ -53,17 +59,17 @@ class GPSPoint:
 
     @property
     def Xn(self) -> float:
-        x, _ = self._TRANSFORMER.transform(self.longitude, self.latitude)
+        x, _ = self._transformer.transform(self.longitude, self.latitude)
         return x
 
     @property
     def Yn(self) -> float:
-        _, y = self._TRANSFORMER.transform(self.longitude, self.latitude)
+        _, y = self._transformer.transform(self.longitude, self.latitude)
         return y
 
     def set_from_Xn_Yn(self, x: float, y: float) -> None:
         """Set GPSPoint using projected coordinates (Xn, Yn)"""
-        lon, lat = self._TRANSFORMER.transform(x, y, direction='INVERSE')
+        lon, lat = self._transformer.transform(x, y, direction=TransformDirection.INVERSE)
         with self._lock:
             logger.debug(f"Setting from XY=({x:.2f}, {y:.2f}) → latlon=({lat:.6f}, {lon:.6f})")
             self.latitude = lat
