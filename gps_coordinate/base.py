@@ -128,4 +128,4 @@ class GPSPoint:
             return north, east
 
     def __repr__(self) -> str:
-        return f"GPSPoint(lat={self.latitude}, lon={self.longitude})"
+        return f"GPSPoint(lat={self.latitude:.5f}, lon={self.longitude:.5f})"
