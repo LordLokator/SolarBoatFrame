@@ -131,16 +131,10 @@ class ShipState:
             logger.critical(err_msg)
             raise ValueError(err_msg)
         delta_psi = psi_k1_radian - psi_k_radian
-        a6 = 5.987527e-09
-        a5 = -1.561371e-06
-        a4 = 1.430259e-04
-        a3 = -0.004935727
-        a2 = 0.01235089
-        a1 = 2.10745127
-        a0 = -0.02348713
+        
         #this is the equation 49 from the paper
         # TODO: check the coefficients AND the units : degree or radian?
-        return a6 * delta_psi**6 + a5 * delta_psi**5 + a4 * delta_psi**4 + a3 * delta_psi**3 + a2 * delta_psi**2 + a1 * delta_psi + a0
+        return self.properties.a6 * delta_psi**6 + self.properties.a5 * delta_psi**5 + self.properties.a4 * delta_psi**4 + self.properties.a3 * delta_psi**3 + self.properties.a2 * delta_psi**2 + self.properties.a1 * delta_psi + self.properties.a0
 
     def S_c(delta_c: float, ngc: float) -> np.ndarray:
         """
@@ -199,10 +193,61 @@ class ShipState:
         ])
         
     def force_vector(self) -> np.ndarray:
+        """return the force vector (Equation 5)."""
         return self.matrix_M() @ self.nu_dot() + self.matrix_C() @ self.nu() + self.matrix_D() @ self.nu()
         
+    @property
+    def T(self) -> float:
+        """return the nominal pressure (Equation 12)."""
+        n_g = None #TODO: get the proper value
+        if n_g >= 0:
+            return 0.0 #TODO: implement the correct values
+        else:
+            return 0.0 #TODO: implement the correct values
         
+    @property
+    def D(self) -> float:
+        """return the drag force (Equation 13)."""
+        n_g = None #TODO: get the proper value
+        if n_g >= 0:
+            return 0.0 #TODO: implement the correct values
+        else:
+            return 0.0
         
+    @property
+    def L(self) -> float:
+        """return the lift force (Equation 14)."""
+        n_g = None #TODO: get the proper value
+        if n_g >= 0:
+            return 0.0 #TODO: implement the correct values
+        else:
+            return 0.0
         
+    @property
+    def F_r(self) -> float:
+        """return the operating force of the rudder (Equation 15)."""
+        if self.u >= 0:
+            return 0.0 #TODO: implement the correct values
+        else:
+            return 0.0 #TODO: implement the correct values
+        
+    @property
+    def Beta_R(self) -> float:
+        """return the local rudder blade drift angle (Equation 16)."""
+        return -1 * np.arctan2(self.v_delta, self.u_delta)
+    
+    @property
+    def u_delta(self) -> float:
+        """return the effective inflow of the water jet to the rudder blade in the longitudinal direction (Equation 17)."""
+        if self.T > 0:
+            return np.sqrt(self.properties.k1 * (self.properties.k2*self.u + np.sqrt(self.properties.k3*u**2 + self.properties.k4*self.T)) **2 + self.properties.k5 * self.u ** 2)
+        else:
+            return 0.0
+        
+    @property
+    def v_delta(self) -> float:
+        """return the effective inflow of the water jet to the rudder blade  in the transverse direction (Equation 18)."""
+        return self.v - (self.r * self.L) / 2.0    
+
     # TODO
     ...
