@@ -39,7 +39,7 @@ def main():
     )
 
     # --- Init Modules ---
-    gps_manager = MockGPSManager()
+    gps_manager = MockGPSManager(47.0, 17.0)
     ship_position = ShipPosition(geofence=geofence, gps_manager=gps_manager)
     ship_position.start_auto_update()
 
