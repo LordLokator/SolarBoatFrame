@@ -1,7 +1,7 @@
 import os
 import time
 from serial import Serial
-from pyubx2 import UBXReader, NMEA_PROTOCOL, UBX_PROTOCOL
+from pyubx2 import UBXReader, NMEA_PROTOCOL, UBX_PROTOCOL, RTCM3_PROTOCOL
 from loguru import logger
 
 
@@ -10,7 +10,7 @@ LOG_PATH = os.path.abspath(os.path.join("logging", "gps_manager.log"))
 
 
 class GPSManager:
-    def __init__(self, port='/dev/ttyUSB0', baudrate=38400, timeout=3):
+    def __init__(self, port='/dev/ttyUSB0', baudrate=115200, timeout=3):
         # NOTE: 'ttyUSB0' is used.
         # If this doesn't work, consider the following:
         # In console, list every USB device: ' ls /dev/tty '
@@ -33,7 +33,7 @@ class GPSManager:
     def _initialize(self):
         try:
             self.stream = Serial(self.port, self.baudrate, timeout=self.timeout)
-            self.ubr = UBXReader(self.stream, protfilter=NMEA_PROTOCOL | UBX_PROTOCOL)
+            self.ubr = UBXReader(self.stream, protfilter=NMEA_PROTOCOL | UBX_PROTOCOL | RTCM3_PROTOCOL)
             logger.debug("Serial connection and UBXReader initialized.")
 
         except Exception as e:
@@ -59,7 +59,7 @@ class GPSManager:
                     logger.debug("Location received: lat={}, lon={}", parsed_data.lat, parsed_data.lon)
                     return parsed_data.lat, parsed_data.lon
 
-                logger.debug("Waiting for GPS fix...")
+                logger.trace("Waiting for GPS fix...")
 
             except Exception as e:
                 pass # We don't care really. Error is logged below.
@@ -77,5 +77,6 @@ class GPSManager:
 
 if __name__ == "__main__":
     manager = GPSManager()
-
-    manager.get_live_location(timeout=10)
+    while True:
+        manager.get_live_location(timeout=10)
+        time.sleep(.3)
