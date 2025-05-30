@@ -25,7 +25,7 @@ class GPSManager:
 
         self.lat = 0.0
         self.lon = 0.0
-        self.heading = 0.0
+        self.heading = None
 
 
         self.stream = None
@@ -60,6 +60,7 @@ class GPSManager:
         while time.time() - start_time < timeout:
             try:
                 raw_data, parsed_data = self.ubr.read()
+                logger.debug(f"raw_data is [{raw_data}]")
                 # if parsed_data is not None and hasattr(parsed_data, 'lat') and hasattr(parsed_data, 'lon'):
                 #     logger.debug("Location received: lat={}, lon={}", parsed_data.lat, parsed_data.lon)
                 #     return parsed_data.lat, parsed_data.lon
