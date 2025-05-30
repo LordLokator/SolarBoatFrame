@@ -1,19 +1,20 @@
 import threading
+import time
 import serial
 
 class SerialParamReader:
     def __init__(self, port='/dev/ttyACM0', baudrate=115_200, timeout=2):
         self.serial_port = serial.Serial(port, baudrate, timeout=timeout)
-        self.param1 = None
-        self.param2 = None
+        self.surge_speed = None
+        self.rudder_angle = None
         self.default_param1 = 0
         self.default_param2 = 0
         self._lock = threading.Lock()
 
     def set_params(self, param1, param2):
         with self._lock:
-            self.param1 = param1
-            self.param2 = param2
+            self.surge_speed = param1
+            self.rudder_angle = param2
 
     def read_input(self):
         if not self.serial_port.is_open:
@@ -26,8 +27,8 @@ class SerialParamReader:
 
             elif line == '1':
                 with self._lock:
-                    if self.param1 is not None and self.param2 is not None:
-                        return (self.param1, self.param2)
+                    if self.surge_speed is not None and self.rudder_angle is not None:
+                        return (self.surge_speed, self.rudder_angle)
 
                     else:
                         raise ValueError("Parameters not set yet.")
@@ -36,6 +37,14 @@ class SerialParamReader:
         except Exception as e:
             print(f"[Error] {e}")
             return None
+
+    def send_rudder_surge(self):
+        while True:
+            self.send_reply((
+                self.rudder_angle,
+                self.surge_speed
+            ))
+            time.sleep(1/15)
 
     def send_reply(self, msg):
         self.serial_port.write(bytearray(msg,'utf-8'))

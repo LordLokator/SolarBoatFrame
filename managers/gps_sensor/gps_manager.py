@@ -23,6 +23,9 @@ class GPSManager:
         self.baudrate = baudrate
         self.timeout = timeout
 
+        self.lat = 0.0
+        self.lon = 0.0
+
         self.stream = None
         self.ubr = None
         self._initialize()
@@ -78,5 +81,6 @@ class GPSManager:
 if __name__ == "__main__":
     manager = GPSManager()
     while True:
-        manager.get_live_location(timeout=10)
+        lat, lon = manager.get_live_location(timeout=1)
+        print(lat, lon)
         time.sleep(.3)
