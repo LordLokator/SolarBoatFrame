@@ -28,7 +28,7 @@ class GPSManager:
         self._initialize()
 
         # WARMUP! NEEDED FOR MORE CONSISTENT STARTUP!
-        _, _ = self.get_live_location(timeout=5)
+        _, _, _ = self.get_live_location(timeout=5)
 
     def _initialize(self):
         try:

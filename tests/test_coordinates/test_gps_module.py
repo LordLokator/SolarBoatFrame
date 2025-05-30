@@ -45,7 +45,7 @@ class TestGPSModule(unittest.TestCase):
         mock_reader.read.side_effect = delayed_read
         mock_ubxreader_cls.return_value = mock_reader
 
-        lat, lon = GPSManager().get_live_location()
+        lat, lon, heading = GPSManager().get_live_location()
 
         self.assertAlmostEqual(lat, 50.0)
         self.assertAlmostEqual(lon, 8.0)

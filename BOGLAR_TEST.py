@@ -66,8 +66,13 @@ corner_1 = GPSPoint(N, W)
 # corner_3 = GPSPoint(S, E)
 # corner_4 = GPSPoint(S, W)
 
+BOGLAR_TEST_WP = GPSPoint(
+    46.78077296310411,
+    17.642497154244396
+)
+
 # Ordered loop of waypoints
-waypoints = [corner_1]
+waypoints = [BOGLAR_TEST_WP]
 
 BOGLAR_DEFAULT_LAT = 46.78157378206975
 BOGLAR_DEFAULT_LON = 17.643741699220094
@@ -77,7 +82,7 @@ boat_origin = GPSPoint(BOGLAR_DEFAULT_LAT, BOGLAR_DEFAULT_LON)
 boat = GPSPoint(boat_origin.latitude, boat_origin.longitude)
 
 def simulate_path_follower_fsm(boat: GPSPoint, waypoints: list[GPSPoint]):
-    lat, lon = gps_manager.get_live_location(timeout=1)
+    lat, lon, heading = gps_manager.get_live_location(timeout=1)
     boat.set_coordinates(GPSPoint(lat, lon))
 
     if not waypoints:
@@ -86,7 +91,8 @@ def simulate_path_follower_fsm(boat: GPSPoint, waypoints: list[GPSPoint]):
     mode = Mode.TRACKING
     int_ey = 0
     error_psi_prev = 0
-    psi = np.pi / 2  # heading north
+    psi = heading or np.pi / 2  # heading north
+
 
     U = 0.0
 

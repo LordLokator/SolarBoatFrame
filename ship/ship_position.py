@@ -50,7 +50,7 @@ class ShipPosition(GPSPoint):
 
         self._gps = self._gps = gps_manager if gps_manager else GPSManager()
 
-        latitude, longitude = self._gps.get_live_location()
+        latitude, longitude, heading = self._gps.get_live_location()
 
         if latitude is None or longitude is None:
             msg = f"ShipPosition couldn't get live GPS and didn't recieve valid initial lat-lon!"
@@ -175,7 +175,7 @@ class ShipPosition(GPSPoint):
             return atan2(sin(delta_psi), cos(delta_psi))
 
     def update_position_with_gps_data(self):
-        lat, lon = self._gps.get_live_location()
+        lat, lon, heading = self._gps.get_live_location()
         if lat is not None and lon is not None:
             position = GPSPoint(lat, lon)
 
@@ -188,7 +188,7 @@ class ShipPosition(GPSPoint):
 
     def _update_loop(self):
         while self._running:
-            lat, lon = self._gps.get_live_location()
+            lat, lon, heading = self._gps.get_live_location()
             if lat is not None and lon is not None:
                 with self._lock:
                     self.latitude = lat
