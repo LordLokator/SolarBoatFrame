@@ -144,8 +144,8 @@ def simulate_path_follower_fsm(boat: GPSPoint, waypoints: list[GPSPoint]):
         boat.set_from_Xn_Yn(new_x, new_y)
 
 
-        serial_communication.rudder_angle = ...
-        serial_communication.surge_speed = U
+        serial_communication.rudder_angle = rudder
+        serial_communication.surge_speed = 2000
 
 
 simulate_path_follower_fsm(
