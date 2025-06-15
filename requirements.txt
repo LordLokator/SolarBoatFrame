@@ -14,3 +14,5 @@ ipykernel # for Jupyter Notebooks
 
 pyubx2 # For reading GPS from UBX compatible devices
 pyserial # Accessing serial ports
+
+pygame # for simulation display
