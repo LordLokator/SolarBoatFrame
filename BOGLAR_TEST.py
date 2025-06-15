@@ -1,7 +1,6 @@
-# %pip install pygame -quiet
+# Finalized script from BOGLAR TEST
 
 import threading
-import pygame
 from enum import Enum, auto
 import numpy as np
 from gps_coordinate.base import GPSPoint
@@ -28,6 +27,7 @@ RUDDER_LIMIT_DEG = 35
 MIN_SPEED = 0.1
 CRUISE_SPEED = 2
 SPEED_STEP = 0.01
+
 
 class Mode(Enum):
     TRACKING = auto()
@@ -81,6 +81,7 @@ boat_origin = GPSPoint(BOGLAR_DEFAULT_LAT, BOGLAR_DEFAULT_LON)
 
 boat = GPSPoint(boat_origin.latitude, boat_origin.longitude)
 
+
 def simulate_path_follower_fsm(boat: GPSPoint, waypoints: list[GPSPoint]):
     lat, lon, heading = gps_manager.get_live_location(timeout=1)
     boat.set_coordinates(GPSPoint(lat, lon))
@@ -92,7 +93,6 @@ def simulate_path_follower_fsm(boat: GPSPoint, waypoints: list[GPSPoint]):
     int_ey = 0
     error_psi_prev = 0
     psi = heading or np.pi / 2  # heading north
-
 
     U = 0.0
 
@@ -136,7 +136,10 @@ def simulate_path_follower_fsm(boat: GPSPoint, waypoints: list[GPSPoint]):
             int_ey += ey * DT
             delta_PD = k1 * error_psi + k2 * de_psi
             delta_PI = k3 * ey + k4 * int_ey
-            rudder = np.clip(delta_PD + delta_PI, -RUDDER_LIMIT_DEG, RUDDER_LIMIT_DEG)
+            rudder = np.clip(
+                delta_PD + delta_PI, - RUDDER_LIMIT_DEG,
+                RUDDER_LIMIT_DEG
+            )
 
         # Apply rudder effect
         rudder_rad = np.deg2rad(rudder)
@@ -148,7 +151,6 @@ def simulate_path_follower_fsm(boat: GPSPoint, waypoints: list[GPSPoint]):
         new_x = boat.Xn + dx_local
         new_y = boat.Yn + dy_local
         boat.set_from_Xn_Yn(new_x, new_y)
-
 
         serial_communication.rudder_angle = rudder
         serial_communication.surge_speed = 2000
