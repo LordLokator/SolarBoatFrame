@@ -52,7 +52,7 @@ class GPSManager:
             interval (float): Time between polls.
 
         Returns:
-            tuple[float, float]: Latitude - Longitude
+            tuple[float, float, float]: Latitude - Longitude - Heading (relative to abs. North)
         """
 
         start_time = time.time()
