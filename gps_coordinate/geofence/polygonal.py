@@ -1,4 +1,3 @@
-from shapely import LineString
 from shapely.geometry import Point, Polygon
 from .base import Geofence
 from ..base import GPSPoint
